@@ -28,3 +28,4 @@ Modules:
 7. The user can input multiple operations that will be completed at a single time. These operations will be kept in a stack, and then performed in order. The next operations will be stored in a stack.
     1. After FP
     2. IE (A+B)*C would first add A and B then multiply the result by C.
+
