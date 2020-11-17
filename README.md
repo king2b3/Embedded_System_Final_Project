@@ -10,7 +10,6 @@ Final project for Zach Hadden, Bryan Kanu and Bayley King for Embedded Systems E
 3. Logical Functions
 4. Arithmetic Functions
 
-
 ### Work Assignments
 Modules:
 1. user should be able to perform an arithmetic operation on two floating point numbers
