@@ -1,6 +1,6 @@
 # Embedded_System_Final_Project
 
-Final project for Zach Hadden, Bryan Kanu and Bayley King for Embedded Systems EECE 6017C.
+Final project for Zack Hadden, Bryan Kanu and Bayley King for Embedded Systems EECE 6017C.
 
 ### Module Plans
 1. Wrapper
