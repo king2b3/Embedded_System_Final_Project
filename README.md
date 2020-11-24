@@ -13,8 +13,8 @@ Final project for Zach Hadden, Bryan Kanu and Bayley King for Embedded Systems E
 ### Work Assignments
 Modules:
 1. user should be able to perform an arithmetic operation on two floating point numbers
-   1. Both
-   2. Input number shift button to take bits into FP number (16->32->48….)
+   1. Input number shift button to take bits into FP number (16->32->48….)
+   2. 
 2. user should be able to perform an arithmetic operation two integers, and have the integer addition have a higher priority than the floating point addition (preempt the floating point addition)
     1. Save for end
 3. Store results in memory, or input values to be stored and used later
