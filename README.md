@@ -1,6 +1,6 @@
 # Embedded_System_Final_Project
 
-Final project for Zach Hadden, Bryan Kanu and Bayley King for Embedded Systems EECE 6017C.
+Final project for Zack Hadden, Bryan Kanu and Bayley King for Embedded Systems EECE 6017C.
 
 ### File Structure Layout
 Final structure will be different, we'll need to have all the verilog files and the wrapper within the same folder. For now though, since we are still testing individual components we can keep everything separated.
@@ -26,7 +26,6 @@ Final structure will be different, we'll need to have all the verilog files and 
 4. Arithmetic Functions
 
 ### Work Assignments
-Modules:
 1. user can input numbers either 16, 32 or 64 bits.
    1. Need to use temp registers
 2. Store results in memory, or input values to be stored and used later
