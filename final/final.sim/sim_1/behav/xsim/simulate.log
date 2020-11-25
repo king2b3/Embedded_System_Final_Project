@@ -1,53 +1,12 @@
 Vivado Simulator 2020.1
 Time resolution is 1 ps
-              840000ps Answer is correct 3cf323ea98d06fb6
-             1660000ps Answer is correct 000010914a4c025a
-             2480000ps Answer is correct 4079000000000000
-             3300000ps Answer is correct 40411d0e56041894
-             4120000ps Answer is correct 400fdb6db6db6db7
-             4940000ps Answer is correct c0d28e0000000000
-             5760000ps Answer is correct c02a000000000000
-             6580000ps Answer is correct c08b900000000000
-             7400000ps Answer is correct bfefb89c2a6346d5
-             8220000ps Answer is correct 4012dc91d14e3bce
-             9040000ps Answer is correct 407b38cccccccccc
-             9860000ps Answer is correct 000012688b70e62b
-            10680000ps Answer is correct 160f5a549627a36c
-            11500000ps Answer is correct 43bbc16d674ec800
-            12320000ps Answer is correct 4000000000000000
-            13140000ps Answer is correct 0000002f201d49fb
-            13960000ps Answer is correct 40e7e9eccccccccd
-            14780000ps Answer is correct 0000027456dbda6d
-            15600000ps Answer is correct 14526914eebbd470
-            16420000ps Answer is correct 3facac083126e600
-            17240000ps Answer is correct c053133333333334
-            18060000ps Answer is correct 3ff0000000000000
-            18880000ps Answer is correct 40513147ae147ae1
-            19700000ps Answer is correct c10c82199999999a
-            20520000ps Answer is correct 000003ae8249c7a2
-            21340000ps Answer is correct 0000000000000000
-            22160000ps Answer is correct 404b000000000000
-            22980000ps Answer is correct ffefffffffffffff
-            23800000ps Answer is correct 3fe525d7ee30f953
-            24620000ps Answer is correct c0d5aa4bda12f685
-            25440000ps Answer is correct 001d7b6f52d0a0f7
-            26260000ps Answer is correct 0021fa474c5e1008
-            27080000ps Answer is correct 401f000000000000
-            27900000ps Answer is correct 40460a1cac083127
-            28720000ps Answer is correct 01934982fc467380
-            29540000ps Answer is correct 80000025b34aa196
-            30360000ps Answer is correct 00000000000017b8
-            31180000ps Answer is correct 3f847ae140000000
-            32000000ps Answer is correct c02a000000000000
-            32820000ps Answer is correct 4043d64f765fd8af
-            33640000ps Answer is correct 4001d70a3d70a3d7
-            34460000ps Answer is correct 00000000022bea15
-            35280000ps Answer is correct 000000001a8a825c
-            36100000ps Answer is correct 4010000000000000
-            36920000ps Answer is correct 00f18e3c781dcab4
-            37740000ps Answer is correct 00000000000f712b
-            38560000ps Answer is correct 8001ca69686873bb
-            39380000ps Answer is correct 800a888a29edf40c
-            40200000ps Answer is correct 223a88ecc2ac8317
-            41020000ps Answer is correct 3f0ec257a882625f
-$finish called at time : 41020 ns : File "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/double_fpu/trunk/fpu_TB.v" Line 833
+                   0   25 +    30 =     x
+                  10   25 -    30 =    55
+                  20   20 -     5 = 65531
+                  30    4 x     5 =    15
+                  40   10 /     2 =    20
+                  50   10 * exp(     2) =     5
+                  60 log_10(   10) =    73
+                  70    2 ^     2 =     1
+                  80   10      2 =     4
+$stop called at time : 90 ns : File "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/norm_logic/int_calc_16_tb.v" Line 83

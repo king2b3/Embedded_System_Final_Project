@@ -4,62 +4,51 @@
 
 `timescale 1ns / 100ps
 
-module int_calc_16(clk, rst, operation, enable, opa, opb, sign, sum);
+module int_calc_16(clk, rst, operation, enable, A, B, sign, sum);
 input		clk;
 input		rst;
 input  [2:0] operation; 
-input	[15:0]	opa, opb;
-output  [15:0]  result;
-input		enable;
-output		sign;
-output  [15:0]	sum;      
+input	[15:0]	A, B;
+input	enable;
+output	reg	sign;
+output  reg [15:0]	sum;      
 
 
 always @ (clk) begin
-    
-    if (reset) begin
 
-        opa <= 0;
-        opb <= 0;
-        sum <= 0;
-        sign <= 0;
-        enable <= 0;
 
-    end else if (enable) begin
+    if (enable) begin
     
         case (operation)
 
-            3'b000: begin
-                        sum <= A + B; // A + B
-                    end
+            3'b000: 
+                    sum = A + B; // A + B
+        
+            3'b001: 
+                    sum <= A - B; // A - B
+        
+            3'b010: 
+                    sum <= A * B; // A x B
+                    
+            3'b011: 
+                    sum <= A / B; // A / B
+        
+            3'b100: 
+                    sum <= A * 2.7**B;// A*exp(B) 
+        
+            3'b101: 
+                    sum <= $log10(A); // log10(A); maybe want this later if possible: log_A (B)
+        
+            3'b110: 
+                        sum <= A**B; // A^B
             
-            3'b001: begin
-                        // A - B
-                    end
-            
-            3'b010: begin
-                        // A x B
-                    end
-            
-            3'b011: begin
-                        // A / B
-                    end
-            
-            3'b100: begin
-                        // A*exp(B) 
-                    end
-            
-            3'b101: begin
-                        // log_A (B)
-                    end
-            
-            3'b110: begin
-                        // A^B
-                    end
-            
-            3'b111: begin
-                        // A % B
-                    end
+            3'b111: 
+                        sum <= A % B;// A % B
+                        
         endcase
+
+        sign <= sum[15];
+
     end
 end
+endmodule
