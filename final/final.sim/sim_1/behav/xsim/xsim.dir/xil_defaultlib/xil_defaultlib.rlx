@@ -11,3 +11,5 @@ E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/double_f
 E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/double_fpu/trunk/fpu_round.v,1231531300,verilog,,E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/double_fpu/trunk/fpu_sub.v,,fpu_round,,,,,,,,
 E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/double_fpu/trunk/fpu_sub.v,1235348280,verilog,,E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/double_fpu/trunk/fpu_TB.v,,fpu_sub,,,,,,,,
 E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/final/final.sim/sim_1/behav/xsim/glbl.v,1590624368,verilog,,,,glbl,,,,,,,,
+E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/norm_logic/int_calc_16.v,1606256911,verilog,,E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/norm_logic/int_calc_16_tb.v,,int_calc_16,,,,,,,,
+E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/norm_logic/int_calc_16_tb.v,1606257189,verilog,,,,int_calc_16_tb,,,,,,,,

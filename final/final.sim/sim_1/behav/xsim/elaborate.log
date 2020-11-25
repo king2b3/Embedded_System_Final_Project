@@ -1,8 +1,15 @@
 Vivado Simulator 2020.1
 Copyright 1986-1999, 2001-2020 Xilinx, Inc. All Rights Reserved.
-Running: E:/Vivado/2020.1/bin/unwrapped/win64.o/xelab.exe -wto 964700520cb547c4b4336b6c44eba214 --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot fpu_tb_behav xil_defaultlib.fpu_tb xil_defaultlib.glbl -log elaborate.log 
+Running: E:/Vivado/2020.1/bin/unwrapped/win64.o/xelab.exe -wto 964700520cb547c4b4336b6c44eba214 --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot int_calc_16_tb_behav xil_defaultlib.int_calc_16_tb xil_defaultlib.glbl -log elaborate.log 
 Using 2 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
+WARNING: [VRFC 10-3401] illegal argument of type wire [packed dim count:1] in math function 'log10()', expected real type [E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/norm_logic/int_calc_16.v:45]
 Completed static elaboration
-INFO: [XSIM 43-4323] No Change in HDL. Linking previously generated obj files to create kernel
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.int_calc_16
+Compiling module xil_defaultlib.int_calc_16_tb
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot int_calc_16_tb_behav
