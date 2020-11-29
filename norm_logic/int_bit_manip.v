@@ -1,29 +1,25 @@
 // Bayley King, Bryan Kanu, Zach Hadden
 // Embedded Systems final project
-// Bit shift operations on 16-bit inputs
+// Bit shift operations on 64-bit inputs
 
 `timescale 1ns / 100ps
 
-module int_calc_16(clk, rst, operation, enable, opa, opb, sign, out);
+module int_calc(clk, rst, operation, enable, opa, opb, sign, out);
 input   clk;
 input   rst;
 input   [2:0] operation; 
-input   [31:0]  opa, opb;
-output  [31:0]  result;
+input   [63:0]  opa, opb;
 input   enable;
 output  sign;
-output  [31:0]  out;      
+output  [63:0]  out;      
 
 
 always @ (clk) begin
     
     if (reset) begin
 
-        opa <= 0;
-        opb <= 0;
         out <= 0;
         sign <= 0;
-        enable <= 0;
 
     end else if (enable) begin
     
@@ -45,5 +41,7 @@ always @ (clk) begin
                         out <= opa; 
                     end
         endcase
+
+        sign <= out[63];
     end
 end
