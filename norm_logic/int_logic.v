@@ -4,52 +4,28 @@
 
 `timescale 1ns / 100ps
 
-module int_calc(clk, rst, operation, enable, opa, opb, out);
-input   clk;
-input   rst;
-input   [2:0] operation; 
-input   [63:0]  opa, opb;
-input   enable;
-output  [63:0]  out;      
+module int_log(clk, rst, operation, opa, opb, out);
+input       clk;
+input       rst;
+input       [2:0] operation; 
+input       [63:0]  opa, opb;
+output      [63:0]  out;      
 
 
 always @ (clk) begin
     
     if (reset) begin
-
         out <= 0;;
 
     end else if (enable) begin
-    
         case (operation)
-
-            3'b000: begin
-                        out <= opa & opb; // A & B
-                    end
-            
-            3'b001: begin
-                        out <= ~(opa & opb); // ~(A & opb)
-                    end
-            
-            3'b010: begin
-                        out <= opa | opb; // A x B
-                    end
-            
-            3'b011: begin
-                        out <= ~(opa | opb); // ~(A | B)
-                    end
-            
-            3'b100: begin
-                        out <= opa ^ opb; // A ^ B 
-                    end
-            
-            3'b101: begin
-                        out <= ~(opa ^ opb); // ~(A^B)
-                    end
-            
-            3'b110: begin
-                        out <= !(opa); // A^B
-                    end
+        3'b000: out <= opa & opb;       // A & B
+        3'b001: out <= ~(opa & opb);    // ~(A & opb)
+        3'b010: out <= opa | opb;       // A x B
+        3'b011: out <= ~(opa | opb);    // ~(A | B)
+        3'b100: out <= opa ^ opb;       // A ^ B 
+        3'b101: out <= ~(opa ^ opb);    // ~(A^B)
+        3'b110: out <= !(opa);          // A^B
         endcase
     end
 end
