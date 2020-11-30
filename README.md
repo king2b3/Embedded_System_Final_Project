@@ -19,19 +19,14 @@ Final structure will be different, we'll need to have all the verilog files and 
 
 ### Module Plans
 1. Wrapper
-    1. VGA Output
-    2. Stack Command Queue
-2. Floating Point
-3. Logical Functions
-4. Arithmetic Functions
+   1. Floating Point
+   2. Logical Functions
+   3. Arithmetic Functions
+   4. Bit Manipulation
 
 ### Work Assignments
-1. user can input numbers either 16, 32 or 64 bits.
-   1. Need to use temp registers
-2. Store results in memory, or input values to be stored and used later
-   1. More set registers on board. Define set of memory, allow the user to call it
-3. Display results either on the 7-seg or VGA outputs to terminal
-    1. For now use $display, we will give UART another try though. Also follow up with Chris on VGA
-4. The user can input multiple operations that will be completed at a single time. These operations will be kept in a stack, and then performed in order. The next operations will be stored in a stack.
-    1. IE (A+B)*C would first add A and B then multiply the result by C.
-5. the integer addition have a higher priority than the floating point addition (preempt the floating point addition)
+1. Let user select rounding mode for FP
+2. Test code
+3. Clear exceptions / other FPU out LEDS on other op selection
+   1. Change these in state 2?
+4. Stack Queue? 

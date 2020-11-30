@@ -220,7 +220,12 @@ always @ (clk) begin
                 out <= opa;
             end
             endcase
-            sign <= out[63];
+            case (size_sel)
+            2'b00:      sign <= out[15];
+            2'b00:      sign <= out[31];
+            2'b00:      sign <= out[63];  
+            endcase                      
+            
             $display($time,"Output = ",out)
             state <= 0;
         end 
