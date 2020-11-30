@@ -4,30 +4,28 @@
 
 `timescale 1ns / 100ps
 
-module int_calc(clk, rst, operation, A, B, sum);
+module int_calc(clk, operation, opa, opb, out);
 input           clk;
-input		rst;
 input           [2:0] operation; 
 input	        [63:0]	opa, opb;
-output          [63:0]	sum;      
+output          [63:0]	out;      
 
+reg         [63:0]  out_temp; 
 
 always @ (clk) begin
 
+    case (operation)
+    3'b000: out_temp <= opa + opb;           // A + B
+    3'b001: out_temp <= opa - opb;           // A - B
+    3'b010: out_temp <= opa * opb;           // A x B
+    3'b011: out_temp <= opa / opb;           // A / B
+    //3'b100: out_temp <= $log10(opa);       // log10(A); maybe want this later if possible: log_A (B) 
+    //3'b101: out_temp <= opa**opb;            // A^B
+    3'b110: out_temp <= opa % opb;           // A % B      
+    endcase
 
-    if (enable) begin
-        case (operation)
-        3'b000: sum <= A + B;           // A + B
-        3'b001: sum <= A - B;           // A - B
-        3'b010: sum <= A * B;           // A x B
-        3'b011: sum <= A / B;           // A / B
-        3'b100: sum <= $log10(A);       // log10(A); maybe want this later if possible: log_A (B) 
-        3'b101: sum <= A**B;            // A^B
-        3'b110: sum <= A % B;           // A % B      
-        endcase
-
-        sign <= sum[63];
-
-    end
 end
+
+assign out = out_temp;
+
 endmodule
