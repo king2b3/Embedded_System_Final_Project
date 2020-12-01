@@ -11,6 +11,7 @@ input	        [63:0]	opa, opb;
 output          [63:0]	out;      
 
 reg         [63:0]  out_temp; 
+integer i;
 
 always @ (clk) begin
     case (operation)
@@ -18,9 +19,13 @@ always @ (clk) begin
     3'b001: out_temp <= opa - opb;           // A - B
     3'b010: out_temp <= opa * opb;           // A x B
     3'b011: out_temp <= opa / opb;           // A / B
-    //3'b100: out_temp <= $log10(opa);       // log10(A); maybe want this later if possible: log_A (B) 
-    //3'b101: out_temp <= opa**opb;            // A^B
     3'b100: out_temp <= opa % opb;           // A % B      
+    3'b101: begin
+        out_temp <= 1; 
+          for(i =0; i < opb ; i = i + 1) begin
+              out_temp <= out_temp * opa;
+          end
+       end
     endcase
 
 end
