@@ -4,12 +4,34 @@ Running: E:/Vivado/2020.1/bin/unwrapped/win64.o/xelab.exe -wto 964700520cb547c4b
 Using 2 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
-WARNING: [VRFC 10-3401] illegal argument of type wire [packed dim count:1] in math function 'log10()', expected real type [E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/norm_logic/int_calc_16.v:45]
 Completed static elaboration
 Starting simulation data flow analysis
+WARNING: [XSIM 43-4099] "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/debouncer.v" Line 7. Module debouncer doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/debouncer.v" Line 21. Module clock_enable doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/debouncer.v" Line 31. Module my_dff_en doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/debouncer.v" Line 31. Module my_dff_en doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/debouncer.v" Line 31. Module my_dff_en doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/debouncer.v" Line 7. Module debouncer doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/debouncer.v" Line 21. Module clock_enable doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/debouncer.v" Line 31. Module my_dff_en doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/debouncer.v" Line 31. Module my_dff_en doesn't have a timescale but at least one module in design has a timescale.
+WARNING: [XSIM 43-4099] "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/debouncer.v" Line 31. Module my_dff_en doesn't have a timescale but at least one module in design has a timescale.
 Completed simulation data flow analysis
 Time Resolution for simulation is 1ps
-Compiling module xil_defaultlib.int_calc_16
+Compiling module xil_defaultlib.clock_enable
+Compiling module xil_defaultlib.my_dff_en
+Compiling module xil_defaultlib.debouncer
+Compiling module xil_defaultlib.fpu_add
+Compiling module xil_defaultlib.fpu_sub
+Compiling module xil_defaultlib.fpu_mul
+Compiling module xil_defaultlib.fpu_div
+Compiling module xil_defaultlib.fpu_round
+Compiling module xil_defaultlib.fpu_exceptions
+Compiling module xil_defaultlib.fpu_double
+Compiling module xil_defaultlib.int_bit_manip
+Compiling module xil_defaultlib.int_calc
+Compiling module xil_defaultlib.int_log
+Compiling module xil_defaultlib.top
 Compiling module xil_defaultlib.int_calc_16_tb
 Compiling module xil_defaultlib.glbl
 Built simulation snapshot int_calc_16_tb_behav

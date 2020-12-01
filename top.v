@@ -119,9 +119,8 @@ always @ (clk) begin
                 end
 
                 3'b001: begin
-                    $display($time,"Please select a Arthimatic Operation on switches XXX. Then press XX to confirm the mode");
-                    $display("000: add (A+B). 001: sub (A-B). 010: mul (A*B). 011: div (A/B)");
-                    $display("100: log (log10(A)). 101: pow (A^B). 110: rem (A%B)");
+                    $display($time,"Please select a Arthimatic Operation on switches 2-0. Then press T18 to confirm the mode");
+                    $display("000: add (A+B). 001: sub (A-B). 010: mul (A*B). 011: div (A/B). 100: rem (A remainder B)");
                 end
 
                 3'b010: begin
@@ -151,7 +150,6 @@ always @ (clk) begin
                 state <= state+1;
                 printed <= 1;
             end
-
         end 
         
         

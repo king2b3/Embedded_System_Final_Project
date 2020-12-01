@@ -1,6 +1,30 @@
-INFO: [VRFC 10-2263] Analyzing Verilog file "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/norm_logic/int_calc_16.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module int_calc_16
-WARNING: [VRFC 10-3401] illegal argument of type wire [packed dim count:1] in math function 'log10()', expected real type [E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/norm_logic/int_calc_16.v:45]
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/debouncer.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module debouncer
+INFO: [VRFC 10-311] analyzing module clock_enable
+INFO: [VRFC 10-311] analyzing module my_dff_en
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/double_fpu/trunk/fpu_add.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_add
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/double_fpu/trunk/fpu_div.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_div
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/double_fpu/trunk/fpu_double.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_double
+INFO: [VRFC 10-2458] undeclared symbol except_enable, assumed default net type wire [E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/double_fpu/trunk/fpu_double.v:149]
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/double_fpu/trunk/fpu_exceptions.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_exceptions
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/double_fpu/trunk/fpu_mul.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_mul
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/double_fpu/trunk/fpu_round.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_round
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/double_fpu/trunk/fpu_sub.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu_sub
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/norm_logic/int_bit_manip.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module int_bit_manip
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/norm_logic/int_calc.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module int_calc
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/norm_logic/int_logic.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module int_log
+INFO: [VRFC 10-2263] Analyzing Verilog file "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/top.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module top
+INFO: [VRFC 10-2458] undeclared symbol expection, assumed default net type wire [E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/top.v:64]
 INFO: [VRFC 10-2263] Analyzing Verilog file "E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/norm_logic/int_calc_16_tb.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module int_calc_16_tb
-WARNING: [VRFC 10-1581] illegal format specifier   for display [E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/norm_logic/int_calc_16_tb.v:80]

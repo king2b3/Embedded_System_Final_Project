@@ -1,6 +1,17 @@
 # compile verilog/system verilog design source files
 verilog xil_defaultlib  \
-"../../../../../norm_logic/int_calc_16.v" \
+"../../../../../debouncer.v" \
+"../../../../../double_fpu/trunk/fpu_add.v" \
+"../../../../../double_fpu/trunk/fpu_div.v" \
+"../../../../../double_fpu/trunk/fpu_double.v" \
+"../../../../../double_fpu/trunk/fpu_exceptions.v" \
+"../../../../../double_fpu/trunk/fpu_mul.v" \
+"../../../../../double_fpu/trunk/fpu_round.v" \
+"../../../../../double_fpu/trunk/fpu_sub.v" \
+"../../../../../norm_logic/int_bit_manip.v" \
+"../../../../../norm_logic/int_calc.v" \
+"../../../../../norm_logic/int_logic.v" \
+"../../../../../top.v" \
 "../../../../../norm_logic/int_calc_16_tb.v" \
 
 # compile glbl module
