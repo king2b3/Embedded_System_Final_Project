@@ -1,7 +1,7 @@
 Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2020.1 (win64) Build 2902540 Wed May 27 19:54:49 MDT 2020
-| Date         : Tue Nov 24 17:08:19 2020
+| Date         : Mon Nov 30 20:10:06 2020
 | Host         : DESKTOP-IAE150N running 64-bit major release  (build 9200)
 | Command      : report_control_sets -verbose -file GPIO_demo_control_sets_placed.rpt
 | Design       : GPIO_demo
@@ -23,11 +23,11 @@ Table of Contents
 +----------------------------------------------------------+-------+
 |                          Status                          | Count |
 +----------------------------------------------------------+-------+
-| Total control sets                                       |    31 |
-|    Minimum number of control sets                        |    31 |
+| Total control sets                                       |    10 |
+|    Minimum number of control sets                        |    10 |
 |    Addition due to synthesis replication                 |     0 |
 |    Addition due to physical synthesis replication        |     0 |
-| Unused register locations in slices containing registers |    78 |
+| Unused register locations in slices containing registers |    14 |
 +----------------------------------------------------------+-------+
 * Control sets can be merged at opt_design using control_set_merge or merge_equivalent_drivers
 ** Run report_qor_suggestions for automated merging and remapping suggestions
@@ -39,15 +39,15 @@ Table of Contents
 +--------------------+-------+
 |       Fanout       | Count |
 +--------------------+-------+
-| Total control sets |    31 |
+| Total control sets |    10 |
 | >= 0 to < 4        |     0 |
-| >= 4 to < 6        |     3 |
-| >= 6 to < 8        |     1 |
-| >= 8 to < 10       |     4 |
-| >= 10 to < 12      |     3 |
-| >= 12 to < 14      |     4 |
-| >= 14 to < 16      |     2 |
-| >= 16              |    14 |
+| >= 4 to < 6        |     0 |
+| >= 6 to < 8        |     0 |
+| >= 8 to < 10       |     0 |
+| >= 10 to < 12      |     0 |
+| >= 12 to < 14      |     0 |
+| >= 14 to < 16      |     1 |
+| >= 16              |     9 |
 +--------------------+-------+
 * Control sets can be remapped at either synth_design or opt_design
 
@@ -58,52 +58,31 @@ Table of Contents
 +--------------+-----------------------+------------------------+-----------------+--------------+
 | Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
 +--------------+-----------------------+------------------------+-----------------+--------------+
-| No           | No                    | No                     |             182 |           63 |
+| No           | No                    | No                     |              19 |            9 |
 | No           | No                    | Yes                    |               0 |            0 |
-| No           | Yes                   | No                     |             213 |           53 |
-| Yes          | No                    | No                     |              72 |           22 |
+| No           | Yes                   | No                     |             112 |           29 |
+| Yes          | No                    | No                     |               0 |            0 |
 | Yes          | No                    | Yes                    |               0 |            0 |
-| Yes          | Yes                   | No                     |             135 |           38 |
+| Yes          | Yes                   | No                     |              63 |           17 |
 +--------------+-----------------------+------------------------+-----------------+--------------+
 
 
 4. Detailed Control Set Information
 -----------------------------------
 
-+-------------------------------------------+----------------------------------------------------------------------------+----------------------------------------------------------------------------+------------------+----------------+--------------+
-|                Clock Signal               |                                Enable Signal                               |                              Set/Reset Signal                              | Slice Load Count | Bel Load Count | Bels / Slice |
-+-------------------------------------------+----------------------------------------------------------------------------+----------------------------------------------------------------------------+------------------+----------------+--------------+
-|  CLK_IBUF_BUFG                            | eqOp2_in                                                                   | tmrVal[3]_i_1_n_0                                                          |                1 |              4 |         4.00 |
-|  Inst_vga_ctrl/clk_wiz_0_inst/U0/clk_out1 | Inst_vga_ctrl/Inst_MouseCtl/Inst_Ps2Interface/FSM_onehot_state_reg[0]_3    | Inst_vga_ctrl/Inst_MouseCtl/x_overflow_i_1_n_0                             |                1 |              4 |         4.00 |
-|  Inst_vga_ctrl/clk_wiz_0_inst/U0/clk_out1 | Inst_vga_ctrl/Inst_MouseCtl/Inst_Ps2Interface/shift_frame                  | Inst_vga_ctrl/Inst_MouseCtl/Inst_Ps2Interface/reset_bit_count              |                2 |              4 |         2.00 |
-|  Inst_vga_ctrl/clk_wiz_0_inst/U0/clk_out1 | Inst_vga_ctrl/Inst_MouseCtl/Inst_Ps2Interface/delay_63clk_count[6]_i_2_n_0 | Inst_vga_ctrl/Inst_MouseCtl/Inst_Ps2Interface/delay_63clk_count[6]_i_1_n_0 |                3 |              7 |         2.33 |
-|  Inst_vga_ctrl/clk_wiz_0_inst/U0/clk_out1 | Inst_vga_ctrl/Inst_MouseCtl/Inst_Ps2Interface/FSM_onehot_state_reg[0]_1    | Inst_vga_ctrl/Inst_MouseCtl/x_inc[7]_i_1_n_0                               |                1 |              8 |         8.00 |
-|  Inst_vga_ctrl/clk_wiz_0_inst/U0/clk_out1 | Inst_vga_ctrl/Inst_MouseCtl/Inst_Ps2Interface/FSM_onehot_state_reg[0]_2    | Inst_vga_ctrl/Inst_MouseCtl/y_inc[4]_i_1_n_0                               |                3 |              8 |         2.67 |
-|  Inst_vga_ctrl/clk_wiz_0_inst/U0/clk_out1 | Inst_vga_ctrl/Inst_MouseCtl/Inst_Ps2Interface/load_rx_data                 |                                                                            |                1 |              8 |         8.00 |
-|  Inst_vga_ctrl/clk_wiz_0_inst/U0/clk_out1 | Inst_vga_ctrl/Inst_MouseCtl/write_data_1                                   |                                                                            |                3 |              8 |         2.67 |
-|  Inst_vga_ctrl/clk_wiz_0_inst/U0/clk_out1 | Inst_vga_ctrl/Inst_MouseCtl/Inst_Ps2Interface/frame[9]_i_1_n_0             |                                                                            |                2 |             10 |         5.00 |
-|  Inst_vga_ctrl/clk_wiz_0_inst/U0/clk_out1 | Inst_vga_ctrl/Inst_MouseCtl/Inst_Ps2Interface/delay_20us_count[10]_i_2_n_0 | Inst_vga_ctrl/Inst_MouseCtl/Inst_Ps2Interface/delay_20us_count[10]_i_1_n_0 |                3 |             11 |         3.67 |
-|  Inst_vga_ctrl/clk_wiz_0_inst/U0/clk_out1 | Inst_vga_ctrl/Inst_MouseCtl/y_new_reg_n_0                                  |                                                                            |                4 |             11 |         2.75 |
-|  Inst_vga_ctrl/clk_wiz_0_inst/U0/clk_out1 |                                                                            | Inst_vga_ctrl/vga_red_reg[3]_i_1_n_0                                       |                2 |             12 |         6.00 |
-|  Inst_vga_ctrl/clk_wiz_0_inst/U0/clk_out1 |                                                                            | Inst_vga_ctrl/eqOp4_in                                                     |                3 |             12 |         4.00 |
-|  Inst_vga_ctrl/clk_wiz_0_inst/U0/clk_out1 | Inst_vga_ctrl/eqOp4_in                                                     | Inst_vga_ctrl/v_cntr_reg0                                                  |                3 |             12 |         4.00 |
-|  Inst_vga_ctrl/clk_wiz_0_inst/U0/clk_out1 | Inst_vga_ctrl/Inst_MouseCtl/x_new_reg_n_0                                  |                                                                            |                3 |             12 |         4.00 |
-|  CLK_IBUF_BUFG                            |                                                                            | Inst_UART_TX_CTRL/bitTmr                                                   |                4 |             14 |         3.50 |
-|  Inst_vga_ctrl/clk_wiz_0_inst/U0/clk_out1 | Inst_vga_ctrl/Inst_MouseCtl/Inst_Ps2Interface/delay_100us_count[0]_i_2_n_0 | Inst_vga_ctrl/Inst_MouseCtl/Inst_Ps2Interface/clear                        |                4 |             14 |         3.50 |
-|  CLK_IBUF_BUFG                            |                                                                            | Inst_btn_debounce/sig_cntrs_ary[1][0]_i_1_n_0                              |                4 |             16 |         4.00 |
-|  CLK_IBUF_BUFG                            |                                                                            | Inst_btn_debounce/sig_cntrs_ary[0][0]_i_1_n_0                              |                4 |             16 |         4.00 |
-|  CLK_IBUF_BUFG                            |                                                                            | Inst_btn_debounce/sig_cntrs_ary[3][0]_i_1_n_0                              |                4 |             16 |         4.00 |
-|  CLK_IBUF_BUFG                            |                                                                            | Inst_btn_debounce/sig_cntrs_ary[2][0]_i_1_n_0                              |                4 |             16 |         4.00 |
-|  CLK_IBUF_BUFG                            |                                                                            | Inst_btn_debounce/sig_cntrs_ary[4][0]_i_1_n_0                              |                4 |             16 |         4.00 |
-|  CLK_IBUF_BUFG                            |                                                                            |                                                                            |                9 |             17 |         1.89 |
-|  CLK_IBUF_BUFG                            |                                                                            | reset_cntr0                                                                |                5 |             18 |         3.60 |
-|  Inst_vga_ctrl/clk_wiz_0_inst/U0/clk_out1 | Inst_vga_ctrl/v_sync_reg                                                   |                                                                            |                9 |             23 |         2.56 |
-|  Inst_vga_ctrl/clk_wiz_0_inst/U0/clk_out1 |                                                                            | Inst_vga_ctrl/Inst_MouseCtl/reset_timeout_cnt                              |                6 |             24 |         4.00 |
-|  Inst_vga_ctrl/clk_wiz_0_inst/U0/clk_out1 |                                                                            | Inst_vga_ctrl/Inst_MouseCtl/reset_periodic_check_cnt                       |                6 |             26 |         4.33 |
-|  CLK_IBUF_BUFG                            |                                                                            | tmrCntr0                                                                   |                7 |             27 |         3.86 |
-|  CLK_IBUF_BUFG                            | strIndex                                                                   | strIndex0                                                                  |                8 |             31 |         3.88 |
-|  CLK_IBUF_BUFG                            | Inst_UART_TX_CTRL/bitIndex                                                 | Inst_UART_TX_CTRL/READY                                                    |                9 |             32 |         3.56 |
-|  Inst_vga_ctrl/clk_wiz_0_inst/U0/clk_out1 |                                                                            |                                                                            |               54 |            165 |         3.06 |
-+-------------------------------------------+----------------------------------------------------------------------------+----------------------------------------------------------------------------+------------------+----------------+--------------+
++----------------+----------------------------+-----------------------------------------------+------------------+----------------+--------------+
+|  Clock Signal  |        Enable Signal       |                Set/Reset Signal               | Slice Load Count | Bel Load Count | Bels / Slice |
++----------------+----------------------------+-----------------------------------------------+------------------+----------------+--------------+
+|  CLK_IBUF_BUFG |                            | Inst_UART_TX_CTRL/bitTmr                      |                4 |             14 |         3.50 |
+|  CLK_IBUF_BUFG |                            | Inst_btn_debounce/sig_cntrs_ary[1][0]_i_1_n_0 |                4 |             16 |         4.00 |
+|  CLK_IBUF_BUFG |                            | Inst_btn_debounce/sig_cntrs_ary[3][0]_i_1_n_0 |                4 |             16 |         4.00 |
+|  CLK_IBUF_BUFG |                            | Inst_btn_debounce/sig_cntrs_ary[4][0]_i_1_n_0 |                4 |             16 |         4.00 |
+|  CLK_IBUF_BUFG |                            | Inst_btn_debounce/sig_cntrs_ary[0][0]_i_1_n_0 |                4 |             16 |         4.00 |
+|  CLK_IBUF_BUFG |                            | Inst_btn_debounce/sig_cntrs_ary[2][0]_i_1_n_0 |                4 |             16 |         4.00 |
+|  CLK_IBUF_BUFG |                            | reset_cntr0                                   |                5 |             18 |         3.60 |
+|  CLK_IBUF_BUFG |                            |                                               |                9 |             19 |         2.11 |
+|  CLK_IBUF_BUFG | strIndex                   | strIndex0                                     |                8 |             31 |         3.88 |
+|  CLK_IBUF_BUFG | Inst_UART_TX_CTRL/bitIndex | Inst_UART_TX_CTRL/READY                       |                9 |             32 |         3.56 |
++----------------+----------------------------+-----------------------------------------------+------------------+----------------+--------------+
 
 

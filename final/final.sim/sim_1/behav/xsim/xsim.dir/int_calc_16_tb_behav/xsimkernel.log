@@ -2,3 +2,6 @@ Running: xsim.dir/int_calc_16_tb_behav/xsimk.exe -simmode gui -wdb int_calc_16_t
 Design successfully loaded
 Design Loading Memory Usage: 5512 KB (Peak: 5512 KB)
 Design Loading CPU Usage: 46 ms
+Simulation completed
+Simulation Memory Usage: 6420 KB (Peak: 6420 KB)
+Simulation CPU Usage: 62 ms

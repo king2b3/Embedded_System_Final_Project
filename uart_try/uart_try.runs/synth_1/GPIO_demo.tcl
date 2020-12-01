@@ -87,14 +87,8 @@ set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
 read_vhdl -library xil_defaultlib {
-  {E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/GPIO/Basys-3-GPIO/src/hdl/MouseCtl.vhd}
-  {E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/GPIO/Basys-3-GPIO/src/hdl/MouseDisplay.vhd}
-  {E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/GPIO/Basys-3-GPIO/src/hdl/Ps2Interface.vhd}
   {E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/GPIO/Basys-3-GPIO/src/hdl/UART_TX_CTRL.vhd}
-  {E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/GPIO/Basys-3-GPIO/src/hdl/clk_wiz_0.vhd}
-  {E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/GPIO/Basys-3-GPIO/src/hdl/clk_wiz_0_clk_wiz.vhd}
   {E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/GPIO/Basys-3-GPIO/src/hdl/debouncer.vhd}
-  {E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/GPIO/Basys-3-GPIO/src/hdl/vga_ctrl.vhd}
   {E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/GPIO/Basys-3-GPIO/src/hdl/GPIO_Demo.vhd}
 }
 OPTRACE "Adding files" END { }
