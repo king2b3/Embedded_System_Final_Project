@@ -68,7 +68,8 @@ int_log u5(
 );
 
 uart_out u6(
-    .inA(out), .CLK(clk), .mode(uart_mode));
+    .inA(out), .CLK(clk), .mode(uart_mode)
+);
     
 initial begin
     
@@ -99,7 +100,7 @@ always @ (clk) begin
         3'b000: begin
             if (printed) begin
                 uart_mode <= 0;
-                //$display($time,"Please select a mode on swithces 2-0. Press button U18 when the mode is selected");
+                // $display($time,"Please select a mode on swithces 2-0. Press button U18 when the mode is selected");
                 // CHAR_ARRAY(0 to 79) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"61",X"20",X"6d",X"6f",X"64",X"65",X"20",X"6f",X"6e",X"20",X"73",X"77",X"69",X"74",X"68",X"63",X"65",X"73",X"20",X"32",X"2d",X"30",X"2e",X"20",X"50",X"72",X"65",X"73",X"73",X"20",X"62",X"75",X"74",X"74",X"6f",X"6e",X"20",X"55",X"31",X"38",X"20",X"77",X"68",X"65",X"6e",X"20",X"74",X"68",X"65",X"20",X"6d",X"6f",X"64",X"65",X"20",X"69",X"73",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"65",X"64");
                 
                 uart_mode <= uart_mode +1;
