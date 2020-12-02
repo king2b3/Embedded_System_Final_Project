@@ -48,7 +48,7 @@ Rounding Modes (rmode):
 2 = round_up
 3 = round_down  */
 
-module fpu( clk, rst, enable, rmode, fpu_op, opa, opb, out, ready, underflow,
+module fpu_double( clk, rst, enable, rmode, fpu_op, opa, opb, out, ready, underflow,
 overflow, inexact, exception, invalid);
 input		clk;
 input		rst;
