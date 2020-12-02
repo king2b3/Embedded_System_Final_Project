@@ -20,12 +20,14 @@ always @ (clk) begin
     3'b010: out_temp <= opa * opb;           // A x B
     3'b011: out_temp <= opa / opb;           // A / B
     3'b100: out_temp <= opa % opb;           // A % B      
+    /*
     3'b101: begin
         out_temp <= 1; 
           for(i =0; i < opb ; i = i + 1) begin
               out_temp <= out_temp * opa;
           end
        end
+    */
     endcase
 
 end

@@ -21,7 +21,8 @@ entity uart_out is
     Port (
         inA 			: in  STD_LOGIC_VECTOR (63 downto 0);
         CLK 			: in  STD_LOGIC;
-        mode            : in integer range 0 to 21
+        mode            : in integer;
+        UART_TXD 	: out  STD_LOGIC
 			  );
 end uart_out;
 
@@ -140,10 +141,15 @@ constant in_17_str_len : natural := 36;
 constant in_18 : CHAR_ARRAY(0 to 8) := (X"4f",X"75",X"74",X"70",X"75",X"74",X"20",X"3d",X"20");
 constant in_18_str_len : natural := 9;
 
+
+constant in_19 : CHAR_ARRAY(0 to 3) := (X"54",X"65",X"73",X"74");
+constant in_19_str_len : natural := 4;
+
 -------------------------------
 -- END OF HARDCODED MESSAGES --
 -------------------------------
 
+signal temp_mode : integer := 19;
 
 --constant outA : CHAR_ARRAY(0 to 29) := (X"54",X"61",X"6b",X"65",X"20",X"74",X"68",X"61",X"74",X"20",X"56",X"47",X"41",X"2c",X"20",X"55",X"41",X"52",X"54",X"20",X"74",X"69",X"6c",X"6c",X"20",X"49",X"20",X"64",X"69",X"65");
 signal outA : CHAR_ARRAY(63 downto 0);															  
@@ -173,7 +179,7 @@ signal btnReg : std_logic_vector (3 downto 0) := "0000";
 signal btnDetect : std_logic;
 
 --UART_TX_CTRL control signals
-signal uartRdy : std_logic;
+signal uartRdy : std_logic := '1';
 signal uartSend : std_logic := '0';
 signal uartData : std_logic_vector (7 downto 0):= "00000000";
 signal uartTX : std_logic;
@@ -227,116 +233,79 @@ begin
 	end loop;
 end process;
 
---Next Uart state logic (states described above)
-next_uartState_process : process (CLK)
-begin
-	if (rising_edge(CLK)) then
-		if (btnDeBnc(4) = '1') then
-			uartState <= RST_REG;
-		else	
-			case uartState is 
-			when RST_REG =>
-        if (reset_cntr = RESET_CNTR_MAX) then
-          uartState <= LD_INIT_STR;
-        end if;
-			when LD_INIT_STR =>
-				uartState <= SEND_CHAR;
-			when SEND_CHAR =>
-				uartState <= RDY_LOW;
-			when RDY_LOW =>
-				uartState <= WAIT_RDY;
-			when WAIT_RDY =>
-				if (uartRdy = '1') then
-					if (strEnd = strIndex) then
-						uartState <= WAIT_BTN;
-					else
-						uartState <= SEND_CHAR;
-					end if;
-				end if;
-			when WAIT_BTN =>
-				if (btnDetect = '1') then
-					uartState <= LD_BTN_STR;
-				end if;
-			when LD_BTN_STR =>
-				uartState <= SEND_CHAR;
-			when others=> --should never be reached
-				uartState <= RST_REG;
-			end case;
-		end if ;
-	end if;
-end process;
+
 
 --Loads the sendStr and strEnd signals when a LD state is
 --is reached.
 string_load_process : process (CLK)
 begin
 	if (rising_edge(CLK)) then
-		if (uartState = LD_INIT_STR) then
-			
-			case mode is
-				when 	 0  => 
-					sendStr(0 to 79) <= in_0; 
-					strEnd <= in_0_str_len; 
-				when 	 1  =>
-					sendStr(0 to 143) <= in_1; 
-					strEnd <= in_1_str_len; 
-				when 	 2  =>
-					sendStr(0 to 81) <= in_2; 
-					strEnd <= in_2_str_len; 
-				when 	 3  =>
-					sendStr(0 to 33) <= in_3; 
-					strEnd <= in_3_str_len; 
-				when 	 4  =>
-					sendStr(0 to 87) <= in_4; 
-					strEnd <= in_4_str_len; 
-				when 	 5  =>
-					sendStr(0 to 79) <= in_5; 
-					strEnd <= in_5_str_len; 
-				when 	 6  =>
-					sendStr(0 to 80) <= in_6;
-					strEnd <= in_6_str_len; 
-				when 	 7  =>
-					sendStr(0 to 54) <= in_7; 
-					strEnd <= in_7_str_len; 
-				when 	 8  =>
-					sendStr(0 to 79) <= in_8; 
-					strEnd <= in_8_str_len;
-				when 	 9  =>
-					sendStr(0 to 117) <= in_9; 
-					strEnd <= in_9_str_len;
-				when 	 10 =>
-					sendStr(0 to 12) <= in_10; 
-					strEnd <= in_10_str_len;
-				when 	 11 =>
-					sendStr(0 to 78) <= in_11; 
-					strEnd <= in_11_str_len;
-				when 	 12 =>
-					sendStr(0 to 12) <= in_12; 
-					strEnd <= in_12_str_len;
-				when 	 13 =>
-					sendStr(0 to 78) <= in_13; 
-					strEnd <= in_13_str_len;
-				when 	 14 =>
-					sendStr(0 to 23) <= in_14; 
-					strEnd <= in_14_str_len;
-				when 	 15 =>
-					sendStr(0 to 66) <= in_15; 
-					strEnd <= in_15_str_len;
-				when 	 16 =>
-					sendStr(0 to 35) <= in_16; 
-					strEnd <= in_16_str_len;
-				when 	 17 =>
-					sendStr(0 to 35) <= in_17; 
-					strEnd <= in_17_str_len;
-				when 	 18 =>
-					sendStr(0 to 8) <= in_18; 
-					strEnd <= in_18_str_len;
-				when others =>
-					sendStr(0 to 63) <= outA; --  WELCOME_STR;
-					strEnd <= OUTA_STR_LEN; --WELCOME_STR_LEN;
-			end case;
-			
-		end if;
+		--temp_mode <= 19;
+        case temp_mode is
+            when 	 0  => 
+                sendStr(0 to 79) <= in_0; 
+                strEnd <= in_0_str_len; 
+            when 	 1  =>
+                sendStr(0 to 143) <= in_1; 
+                strEnd <= in_1_str_len; 
+            when 	 2  =>
+                sendStr(0 to 81) <= in_2; 
+                strEnd <= in_2_str_len; 
+            when 	 3  =>
+                sendStr(0 to 33) <= in_3; 
+                strEnd <= in_3_str_len; 
+            when 	 4  =>
+                sendStr(0 to 87) <= in_4; 
+                strEnd <= in_4_str_len; 
+            when 	 5  =>
+                sendStr(0 to 79) <= in_5; 
+                strEnd <= in_5_str_len; 
+            when 	 6  =>
+                sendStr(0 to 80) <= in_6;
+                strEnd <= in_6_str_len; 
+            when 	 7  =>
+                sendStr(0 to 54) <= in_7; 
+                strEnd <= in_7_str_len; 
+            when 	 8  =>
+                sendStr(0 to 79) <= in_8; 
+                strEnd <= in_8_str_len;
+            when 	 9  =>
+                sendStr(0 to 117) <= in_9; 
+                strEnd <= in_9_str_len;
+            when 	 10 =>
+                sendStr(0 to 12) <= in_10; 
+                strEnd <= in_10_str_len;
+            when 	 11 =>
+                sendStr(0 to 78) <= in_11; 
+                strEnd <= in_11_str_len;
+            when 	 12 =>
+                sendStr(0 to 12) <= in_12; 
+                strEnd <= in_12_str_len;
+            when 	 13 =>
+                sendStr(0 to 78) <= in_13; 
+                strEnd <= in_13_str_len;
+            when 	 14 =>
+                sendStr(0 to 23) <= in_14; 
+                strEnd <= in_14_str_len;
+            when 	 15 =>
+                sendStr(0 to 66) <= in_15; 
+                strEnd <= in_15_str_len;
+            when 	 16 =>
+                sendStr(0 to 35) <= in_16; 
+                strEnd <= in_16_str_len;
+            when 	 17 =>
+                sendStr(0 to 35) <= in_17; 
+                strEnd <= in_17_str_len;
+            when 	 18 =>
+                sendStr(0 to 8) <= in_18; 
+                strEnd <= in_18_str_len;
+            when others =>
+                sendStr(0 to 3) <= in_19;
+                strEnd <= in_19_str_len;
+                --sendStr(0 to 63) <= outA; --  WELCOME_STR;
+                --strEnd <= OUTA_STR_LEN; --WELCOME_STR_LEN;
+        end case;
+		
 	end if;
 end process;
 
@@ -345,11 +314,7 @@ end process;
 char_count_process : process (CLK)
 begin
 	if (rising_edge(CLK)) then
-		if (uartState = LD_INIT_STR or uartState = LD_BTN_STR) then
-			strIndex <= 0;
-		elsif (uartState = SEND_CHAR) then
-			strIndex <= strIndex + 1;
-		end if;
+		strIndex <= strIndex + 1;
 	end if;
 end process;
 
@@ -357,12 +322,8 @@ end process;
 char_load_process : process (CLK)
 begin
 	if (rising_edge(CLK)) then
-		if (uartState = SEND_CHAR) then
-			uartSend <= '1';
-			uartData <= sendStr(strIndex);
-		else
-			uartSend <= '0';
-		end if;
+        uartSend <= '1';
+        uartData <= sendStr(strIndex);
 	end if;
 end process;
 
@@ -375,6 +336,6 @@ Inst_UART_TX_CTRL: UART_TX_CTRL port map(
 		UART_TX => uartTX 
 	);
 
---UART_TXD <= uartTX;
+UART_TXD <= uartTX;
 
 end Behavioral;

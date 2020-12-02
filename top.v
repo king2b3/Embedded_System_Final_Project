@@ -81,7 +81,7 @@ initial begin
     count <= 0;
     sign_temp <= 0;
     printed <= 1;
-    uart_mode <= 0;
+    uart_mode <= 19;
 end
     
 always @ (clk) begin
