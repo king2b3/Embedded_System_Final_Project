@@ -73,6 +73,8 @@ OPTRACE "synth_1" START { ROLLUP_AUTO }
 set_param chipscope.maxJobs 4
 set_param xicom.use_bs_reader 1
 set_msg_config -id {Common 17-41} -limit 10000000
+set_msg_config -id {Synth 8-256} -limit 10000
+set_msg_config -id {Synth 8-638} -limit 10000
 OPTRACE "Creating in-memory project" START { }
 create_project -in_memory -part xc7a35tcpg236-1
 
@@ -103,6 +105,7 @@ read_verilog -library xil_defaultlib {
 }
 read_vhdl -library xil_defaultlib {
   {E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/UART_TX_CTRL.vhd}
+  {E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/debouncer_2.vhd}
   {E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/uart_out.vhd}
 }
 OPTRACE "Adding files" END { }

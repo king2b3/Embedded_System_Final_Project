@@ -20,6 +20,7 @@ use IEEE.std_logic_unsigned.all;
 entity uart_out is
     Port (
         inA 			: in  STD_LOGIC_VECTOR (63 downto 0);
+        enable 			: in  STD_LOGIC;
         CLK 			: in  STD_LOGIC;
         mode            : in integer;
         UART_TXD 	: out  STD_LOGIC
@@ -43,9 +44,9 @@ Generic(
         DEBNC_CLOCKS : integer;
         PORT_WIDTH : integer);
 Port(
-		SIGNAL_I : in std_logic_vector(4 downto 0);
+		SIGNAL_I : in std_logic;
 		CLK_I : in std_logic;          
-		SIGNAL_O : out std_logic_vector(4 downto 0)
+		SIGNAL_O : out std_logic
 		);
 end component;
 
@@ -156,14 +157,6 @@ signal outA : CHAR_ARRAY(63 downto 0);
 --signal inA : std_logic_vector(63 downto 0); -- pull in the input
 
 
---This is used to determine when the 7-segment display should be
---incremented
-signal tmrCntr : std_logic_vector(26 downto 0) := (others => '0');
-
---This counter keeps track of which number is currently being displayed
---on the 7-segment.
-signal tmrVal : std_logic_vector(3 downto 0) := (others => '0');
-
 --Contains the current string being sent over uart.
 signal sendStr : CHAR_ARRAY(0 to (MAX_STR_LEN - 1));
 
@@ -175,30 +168,55 @@ signal strEnd : natural;
 signal strIndex : natural;
 
 --Used to determine when a button press has occured
-signal btnReg : std_logic_vector (3 downto 0) := "0000";
+signal btnReg : std_logic := '0';
 signal btnDetect : std_logic;
 
 --UART_TX_CTRL control signals
 signal uartRdy : std_logic := '1';
-signal uartSend : std_logic := '0';
+signal uartSend : std_logic := '1';
 signal uartData : std_logic_vector (7 downto 0):= "00000000";
 signal uartTX : std_logic;
 
 --Current uart state signal
 signal uartState : UART_STATE_TYPE := RST_REG;
 
---Debounced btn signals used to prevent single button presses
---from being interpreted as multiple button presses.
-signal btnDeBnc : std_logic_vector(4 downto 0);
-
-signal clk_cntr_reg : std_logic_vector (4 downto 0) := (others=>'0'); 
-
-signal pwm_val_reg : std_logic := '0';
-
 --this counter counts the amount of time paused in the UART reset state
 signal reset_cntr : std_logic_vector (17 downto 0) := (others=>'0');
 
+signal btnDeBnc : std_logic;
+
 begin
+
+----------------------------------------------------------
+------              Button Control                 -------
+----------------------------------------------------------
+--Buttons are debounced and their rising edges are detected
+--to trigger UART messages
+
+--Debounces btn signals
+Inst_btn_debounce: debouncer_2
+    generic map(
+        DEBNC_CLOCKS => (2**16),
+        PORT_WIDTH => 1)
+    port map(
+		SIGNAL_I => enable,
+		CLK_I => CLK,
+		SIGNAL_O => btnDeBnc
+	);
+
+--Registers the debounced button signals, for edge detection.
+btn_reg_process : process (CLK)
+begin
+	if (rising_edge(CLK)) then
+		btnReg <= btnDeBnc;
+	end if;
+end process;
+
+--btnDetect goes high for a single clock cycle when a btn press is
+--detected. This triggers a UART message to begin being sent.
+btnDetect <= '1' when (btnReg='0' and btnDeBnc='1') else
+				  '0';
+
 
 
 
@@ -222,6 +240,45 @@ begin
   end if;
 end process;
 
+--Next Uart state logic (states described above)
+next_uartState_process : process (CLK)
+begin
+	if (rising_edge(CLK)) then
+        case uartState is 
+        when RST_REG =>
+            if (reset_cntr = RESET_CNTR_MAX) then
+                uartState <= LD_INIT_STR;
+            end if;
+        when LD_INIT_STR =>
+            uartState <= SEND_CHAR;
+        when SEND_CHAR =>
+            uartState <= RDY_LOW;
+        when RDY_LOW =>
+            uartState <= WAIT_RDY;
+        when WAIT_RDY =>
+            if (uartRdy = '1') then
+                if (strEnd = strIndex) then
+                    uartState <= WAIT_BTN;
+                else
+                    uartState <= SEND_CHAR;
+                end if;
+            end if;
+        
+        when WAIT_BTN =>
+            if (btnDetect = '1') then
+                uartState <= LD_BTN_STR;
+            end if;
+        when LD_BTN_STR =>
+            uartState <= SEND_CHAR;
+        when others=> --should never be reached
+            uartState <= RST_REG;
+        end case;
+	end if;
+end process;
+
+
+
+
 uart_convert : process (CLK)
 begin
 	for i in 0 to 63 loop
@@ -239,73 +296,75 @@ end process;
 --is reached.
 string_load_process : process (CLK)
 begin
-	if (rising_edge(CLK)) then
-		--temp_mode <= 19;
-        case temp_mode is
-            when 	 0  => 
-                sendStr(0 to 79) <= in_0; 
-                strEnd <= in_0_str_len; 
-            when 	 1  =>
-                sendStr(0 to 143) <= in_1; 
-                strEnd <= in_1_str_len; 
-            when 	 2  =>
-                sendStr(0 to 81) <= in_2; 
-                strEnd <= in_2_str_len; 
-            when 	 3  =>
-                sendStr(0 to 33) <= in_3; 
-                strEnd <= in_3_str_len; 
-            when 	 4  =>
-                sendStr(0 to 87) <= in_4; 
-                strEnd <= in_4_str_len; 
-            when 	 5  =>
-                sendStr(0 to 79) <= in_5; 
-                strEnd <= in_5_str_len; 
-            when 	 6  =>
-                sendStr(0 to 80) <= in_6;
-                strEnd <= in_6_str_len; 
-            when 	 7  =>
-                sendStr(0 to 54) <= in_7; 
-                strEnd <= in_7_str_len; 
-            when 	 8  =>
-                sendStr(0 to 79) <= in_8; 
-                strEnd <= in_8_str_len;
-            when 	 9  =>
-                sendStr(0 to 117) <= in_9; 
-                strEnd <= in_9_str_len;
-            when 	 10 =>
-                sendStr(0 to 12) <= in_10; 
-                strEnd <= in_10_str_len;
-            when 	 11 =>
-                sendStr(0 to 78) <= in_11; 
-                strEnd <= in_11_str_len;
-            when 	 12 =>
-                sendStr(0 to 12) <= in_12; 
-                strEnd <= in_12_str_len;
-            when 	 13 =>
-                sendStr(0 to 78) <= in_13; 
-                strEnd <= in_13_str_len;
-            when 	 14 =>
-                sendStr(0 to 23) <= in_14; 
-                strEnd <= in_14_str_len;
-            when 	 15 =>
-                sendStr(0 to 66) <= in_15; 
-                strEnd <= in_15_str_len;
-            when 	 16 =>
-                sendStr(0 to 35) <= in_16; 
-                strEnd <= in_16_str_len;
-            when 	 17 =>
-                sendStr(0 to 35) <= in_17; 
-                strEnd <= in_17_str_len;
-            when 	 18 =>
-                sendStr(0 to 8) <= in_18; 
-                strEnd <= in_18_str_len;
-            when others =>
-                sendStr(0 to 3) <= in_19;
-                strEnd <= in_19_str_len;
-                --sendStr(0 to 63) <= outA; --  WELCOME_STR;
-                --strEnd <= OUTA_STR_LEN; --WELCOME_STR_LEN;
-        end case;
-		
+    if (rising_edge(CLK)) then
+        if (uartState = LD_INIT_STR) then
+            sendStr(0 to 3) <= in_19;
+            strEnd <= in_19_str_len;
+        
+            elsif (uartState = LD_BTN_STR) then
+            case temp_mode is
+                when 	 0  => 
+                    sendStr(0 to 79) <= in_0; 
+                    strEnd <= in_0_str_len; 
+                when 	 1  =>
+                    sendStr(0 to 143) <= in_1; 
+                    strEnd <= in_1_str_len; 
+                when 	 2  =>
+                    sendStr(0 to 81) <= in_2; 
+                    strEnd <= in_2_str_len; 
+                when 	 3  =>
+                    sendStr(0 to 33) <= in_3; 
+                    strEnd <= in_3_str_len; 
+                when 	 4  =>
+                    sendStr(0 to 87) <= in_4; 
+                    strEnd <= in_4_str_len; 
+                when 	 5  =>
+                    sendStr(0 to 79) <= in_5; 
+                    strEnd <= in_5_str_len; 
+                when 	 6  =>
+                    sendStr(0 to 80) <= in_6;
+                    strEnd <= in_6_str_len; 
+                when 	 7  =>
+                    sendStr(0 to 54) <= in_7; 
+                    strEnd <= in_7_str_len; 
+                when 	 8  =>
+                    sendStr(0 to 79) <= in_8; 
+                    strEnd <= in_8_str_len;
+                when 	 9  =>
+                    sendStr(0 to 117) <= in_9; 
+                    strEnd <= in_9_str_len;
+                when 	 10 =>
+                    sendStr(0 to 12) <= in_10; 
+                    strEnd <= in_10_str_len;
+                when 	 11 =>
+                    sendStr(0 to 78) <= in_11; 
+                    strEnd <= in_11_str_len;
+                when 	 12 =>
+                    sendStr(0 to 12) <= in_12; 
+                    strEnd <= in_12_str_len;
+                when 	 13 =>
+                    sendStr(0 to 78) <= in_13; 
+                    strEnd <= in_13_str_len;
+                when 	 14 =>
+                    sendStr(0 to 23) <= in_14; 
+                    strEnd <= in_14_str_len;
+                when 	 15 =>
+                    sendStr(0 to 66) <= in_15; 
+                    strEnd <= in_15_str_len;
+                when 	 16 =>
+                    sendStr(0 to 35) <= in_16; 
+                    strEnd <= in_16_str_len;
+                when 	 17 =>
+                    sendStr(0 to 35) <= in_17; 
+                    strEnd <= in_17_str_len;
+                when 	 18 =>
+                    sendStr(0 to 8) <= in_18; 
+                    strEnd <= in_18_str_len;
+                when others =>
+                    sendStr(0 to 63) <= outA; --  WELCOME_STR;
+                    strEnd <= OUTA_STR_LEN; --WELCOME_STR_LEN;
+            end case;
+        end if;
 	end if;
 end process;
 
@@ -314,7 +373,11 @@ end process;
 char_count_process : process (CLK)
 begin
 	if (rising_edge(CLK)) then
-		strIndex <= strIndex + 1;
+		if (uartState = LD_INIT_STR or uartState = LD_BTN_STR) then
+			strIndex <= 0;
+		elsif (uartState = SEND_CHAR) then
+			strIndex <= strIndex + 1;
+		end if;
 	end if;
 end process;
 
@@ -322,8 +385,12 @@ end process;
 char_load_process : process (CLK)
 begin
 	if (rising_edge(CLK)) then
-        uartSend <= '1';
-        uartData <= sendStr(strIndex);
+		if (uartState = SEND_CHAR) then
+			uartSend <= '1';
+			uartData <= sendStr(strIndex);
+		else
+			uartSend <= '0';
+		end if;
 	end if;
 end process;
 

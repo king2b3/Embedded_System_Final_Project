@@ -1,0 +1,151 @@
+Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2020.1 (win64) Build 2902540 Wed May 27 19:54:49 MDT 2020
+| Date         : Wed Dec  2 17:45:12 2020
+| Host         : DESKTOP-IAE150N running 64-bit major release  (build 9200)
+| Command      : report_control_sets -verbose -file top_control_sets_placed.rpt
+| Design       : top
+| Device       : xc7a35t
+------------------------------------------------------------------------------------
+
+Control Set Information
+
+Table of Contents
+-----------------
+1. Summary
+2. Histogram
+3. Flip-Flop Distribution
+4. Detailed Control Set Information
+
+1. Summary
+----------
+
++----------------------------------------------------------+-------+
+|                          Status                          | Count |
++----------------------------------------------------------+-------+
+| Total control sets                                       |    73 |
+|    Minimum number of control sets                        |    73 |
+|    Addition due to synthesis replication                 |     0 |
+|    Addition due to physical synthesis replication        |     0 |
+| Unused register locations in slices containing registers |   247 |
++----------------------------------------------------------+-------+
+* Control sets can be merged at opt_design using control_set_merge or merge_equivalent_drivers
+** Run report_qor_suggestions for automated merging and remapping suggestions
+
+
+2. Histogram
+------------
+
++--------------------+-------+
+|       Fanout       | Count |
++--------------------+-------+
+| Total control sets |    73 |
+| >= 0 to < 4        |    13 |
+| >= 4 to < 6        |     3 |
+| >= 6 to < 8        |     7 |
+| >= 8 to < 10       |     1 |
+| >= 10 to < 12      |     2 |
+| >= 12 to < 14      |     8 |
+| >= 14 to < 16      |     7 |
+| >= 16              |    32 |
++--------------------+-------+
+* Control sets can be remapped at either synth_design or opt_design
+
+
+3. Flip-Flop Distribution
+-------------------------
+
++--------------+-----------------------+------------------------+-----------------+--------------+
+| Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
++--------------+-----------------------+------------------------+-----------------+--------------+
+| No           | No                    | No                     |             686 |          381 |
+| No           | No                    | Yes                    |               0 |            0 |
+| No           | Yes                   | No                     |             785 |          236 |
+| Yes          | No                    | No                     |              14 |            5 |
+| Yes          | No                    | Yes                    |               0 |            0 |
+| Yes          | Yes                   | No                     |            3652 |         1094 |
++--------------+-----------------------+------------------------+-----------------+--------------+
+
+
+4. Detailed Control Set Information
+-----------------------------------
+
++-------------------------------------+------------------------------------+--------------------------------------------------+------------------+----------------+--------------+
+|             Clock Signal            |            Enable Signal           |                 Set/Reset Signal                 | Slice Load Count | Bel Load Count | Bels / Slice |
++-------------------------------------+------------------------------------+--------------------------------------------------+------------------+----------------+--------------+
+|  u1/d2/printed5_out                 |                                    |                                                  |                1 |              1 |         1.00 |
+|  clk_IBUF_BUFG                      |                                    | u2/ready_i_1_n_7                                 |                1 |              1 |         1.00 |
+|  u1/d1/rst_0[2]                     |                                    |                                                  |                1 |              1 |         1.00 |
+|  u1/d1/rst[2]                       |                                    |                                                  |                1 |              1 |         1.00 |
+|  memory_reg[191]_i_2_n_7            |                                    |                                                  |                1 |              1 |         1.00 |
+|  sign_temp1_out                     |                                    |                                                  |                1 |              1 |         1.00 |
+|  u1/d2/Q_reg_1[1]                   |                                    |                                                  |                1 |              1 |         1.00 |
+|  u1/d2/Q_reg_2[1]                   |                                    |                                                  |                1 |              1 |         1.00 |
+|  memory_reg[127]_i_2_n_7            |                                    |                                                  |                1 |              1 |         1.00 |
+|  u1/d2/Q_reg_5[0]                   |                                    | rst_IBUF                                         |                1 |              2 |         2.00 |
+|  u1/d2/rst[0]                       |                                    |                                                  |                1 |              2 |         2.00 |
+|  u1/d2/Q_reg_0[0]                   |                                    |                                                  |                1 |              3 |         3.00 |
+|  u1/d2/E[0]                         |                                    |                                                  |                1 |              3 |         3.00 |
+|  clk_IBUF_BUFG                      | u2/u6/NaN_output                   |                                                  |                1 |              4 |         4.00 |
+|  clk_IBUF_BUFG                      | u6/strIndex0                       |                                                  |                2 |              4 |         2.00 |
+|  clk_IBUF_BUFG                      | u2/u4/count_out[5]_i_1_n_7         | rst_IBUF                                         |                2 |              4 |         2.00 |
+|  u2/u3/product_shift_reg[5]_i_2_n_7 |                                    |                                                  |                5 |              6 |         1.20 |
+|  clk_IBUF_BUFG                      | u6/uartSend                        |                                                  |                2 |              6 |         3.00 |
+|  clk_IBUF_BUFG                      | u2/u4/enable_reg_2                 | u2/u4/expon_shift_b[5]_i_1_n_7                   |                2 |              6 |         3.00 |
+|  clk_IBUF_BUFG                      | u2/u4/enable_reg_2                 | u2/u4/expon_shift_a[5]_i_1_n_7                   |                2 |              6 |         3.00 |
+|  clk_IBUF_BUFG                      | u6/strIndex                        | u6/uartData[6]_i_1_n_7                           |                3 |              6 |         2.00 |
+|  clk_IBUF_BUFG                      | u2/sel                             | u2/ready_i_1_n_7                                 |                2 |              7 |         3.50 |
+|  u1/d2/op2__0                       |                                    |                                                  |                2 |              7 |         3.50 |
+|  clk_IBUF_BUFG                      | u2/u4/enable_reg_2                 | u2/u4/expon_uf_term_4[11]_i_1_n_7                |                3 |              9 |         3.00 |
+|  clk_IBUF_BUFG                      | u2/sub_enable                      | u2/u2/exponent_2[10]_i_1_n_7                     |                5 |             11 |         2.20 |
+|  clk_IBUF_BUFG                      | u2/sub_enable                      | u2/u2/exponent[10]_i_1_n_7                       |                3 |             11 |         3.67 |
+|  clk_IBUF_BUFG                      |                                    | u2/u4/exponent_out[11]_i_1_n_7                   |                5 |             12 |         2.40 |
+|  clk_IBUF_BUFG                      | u2/u4/enable_reg_2                 | u2/u4/expon_final_2[11]_i_1_n_7                  |                3 |             12 |         4.00 |
+|  clk_IBUF_BUFG                      | u2/mul_enable                      | u2/u3/exponent_2[11]_i_1_n_7                     |                4 |             12 |         3.00 |
+|  clk_IBUF_BUFG                      | u2/u4/enable_reg_2                 | u2/u4/expon_uf_term_1[11]_i_1_n_7                |                3 |             12 |         4.00 |
+|  clk_IBUF_BUFG                      | u2/u4/enable_reg_2                 | u2/u4/expon_final_3[11]_i_1_n_7                  |                3 |             12 |         4.00 |
+|  clk_IBUF_BUFG                      | u2/u4/enable_reg_2                 | u2/u4/expon_uf_term_2[11]_i_1_n_7                |                3 |             12 |         4.00 |
+|  clk_IBUF_BUFG                      | u2/mul_enable                      | u2/u3/exponent_5[11]_i_1_n_7                     |                7 |             12 |         1.71 |
+|  clk_IBUF_BUFG                      | u2/mul_enable                      | u2/u3/exponent_4[11]_i_1_n_7                     |                6 |             12 |         2.00 |
+|  clk_IBUF_BUFG                      |                                    | u6/Inst_UART_TX_CTRL/bitTmr                      |                4 |             14 |         3.50 |
+|  u1/d1/rst_0[1]                     |                                    |                                                  |                5 |             15 |         3.00 |
+|  u1/d1/rst[1]                       |                                    |                                                  |                5 |             15 |         3.00 |
+|  u1/d2/Q_reg_2[0]                   |                                    |                                                  |                8 |             15 |         1.88 |
+|  u1/d2/Q_reg_1[2]                   |                                    |                                                  |                7 |             15 |         2.14 |
+|  u1/d2/Q_reg_2[2]                   |                                    |                                                  |                5 |             15 |         3.00 |
+|  u1/d2/Q_reg_1[0]                   |                                    |                                                  |                6 |             15 |         2.50 |
+|  u1/d1/rst_0[0]                     |                                    |                                                  |                6 |             16 |         2.67 |
+|  clk_IBUF_BUFG                      |                                    | u6/Inst_btn_debounce/sig_cntrs_ary[0][0]_i_1_n_7 |                4 |             16 |         4.00 |
+|  clk_IBUF_BUFG                      |                                    | u6/reset_cntr0                                   |                5 |             18 |         3.60 |
+|  u1/d1/rst[0]                       |                                    |                                                  |                7 |             19 |         2.71 |
+|  clk_IBUF_BUFG                      |                                    | u1/u1/clear                                      |                7 |             27 |         3.86 |
+|  clk_IBUF_BUFG                      | u6/strIndex                        | u6/strIndex0                                     |                8 |             31 |         3.88 |
+|  clk_IBUF_BUFG                      | u6/Inst_UART_TX_CTRL/txBit_i_2_n_7 | u6/Inst_UART_TX_CTRL/READY                       |                9 |             32 |         3.56 |
+|  clk_IBUF_BUFG                      | u2/u4/dividend_reg[51]_i_1_n_7     | rst_IBUF                                         |               24 |             51 |         2.13 |
+|  clk_IBUF_BUFG                      | u2/u4/enable_reg_e                 | rst_IBUF                                         |               15 |             51 |         3.40 |
+|  clk_IBUF_BUFG                      | u2/u4/remainder0                   | rst_IBUF                                         |               18 |             53 |         2.94 |
+|  clk_IBUF_BUFG                      | u2/sub_enable                      | u2/u2/subtra_shift_3[1]                          |               13 |             54 |         4.15 |
+|  clk_IBUF_BUFG                      | u2/add_enable                      | u2/u1/small_shift_3[55]                          |               18 |             54 |         3.00 |
+|  clk_IBUF_BUFG                      |                                    | u6/sendStr[0]_3                                  |               13 |             60 |         4.62 |
+|  n_6_16359_BUFG                     |                                    |                                                  |               33 |             62 |         1.88 |
+|  n_5_16357_BUFG                     |                                    |                                                  |               34 |             62 |         1.82 |
+|  clk_IBUF_BUFG                      | u2/op_enable                       | u2/u6/out_0[62]_i_1_n_7                          |               20 |             63 |         3.15 |
+|  n_4_16355_BUFG                     |                                    |                                                  |               36 |             63 |         1.75 |
+|  n_3_16352_BUFG                     |                                    |                                                  |               38 |             63 |         1.66 |
+|  n_0_16115_BUFG                     |                                    |                                                  |               48 |             64 |         1.33 |
+|  n_1_16351_BUFG                     |                                    | rst_IBUF                                         |               36 |             64 |         1.78 |
+|  n_2_5743_BUFG                      |                                    |                                                  |               46 |             64 |         1.39 |
+| ~op2_BUFG[2]                        |                                    |                                                  |               40 |             64 |         1.60 |
+|  clk_IBUF_BUFG                      | u2/ready_1                         | rst_IBUF                                         |               19 |             68 |         3.58 |
+|  clk_IBUF_BUFG                      |                                    | u2/fpu_op_reg[2]                                 |               28 |             72 |         2.57 |
+|  clk_IBUF_BUFG                      |                                    |                                                  |               39 |             90 |         2.31 |
+|  clk_IBUF_BUFG                      | u2/enable_reg_1                    | rst_IBUF                                         |               56 |            130 |         2.32 |
+|  clk_IBUF_BUFG                      | u2/op_enable                       | rst_IBUF                                         |               80 |            339 |         4.24 |
+|  clk_IBUF_BUFG                      |                                    | rst_IBUF                                         |              132 |            499 |         3.78 |
+|  clk_IBUF_BUFG                      | u2/u4/enable_reg_2                 | rst_IBUF                                         |              172 |            503 |         2.92 |
+|  clk_IBUF_BUFG                      | u2/add_enable                      | rst_IBUF                                         |              139 |            562 |         4.04 |
+|  clk_IBUF_BUFG                      | u2/sub_enable                      | rst_IBUF                                         |              176 |            606 |         3.44 |
+|  clk_IBUF_BUFG                      | u2/mul_enable                      | rst_IBUF                                         |              276 |            911 |         3.30 |
++-------------------------------------+------------------------------------+--------------------------------------------------+------------------+----------------+--------------+
+
+

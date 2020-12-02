@@ -55,5 +55,3 @@ set_property src_info {type:XDC file:1 line:117 export:INPUT save:INPUT read:REA
 set_property PACKAGE_PIN T18 [get_ports rst]
 set_property src_info {type:XDC file:1 line:273 export:INPUT save:INPUT read:READ} [current_design]
 set_property PACKAGE_PIN A18 [get_ports UART_TXD]
-set_property src_info {type:XDC file:1 line:274 export:INPUT save:INPUT read:READ} [current_design]
-set_property IOSTANDARD LVCMOS33 [get_ports UART_TXD]

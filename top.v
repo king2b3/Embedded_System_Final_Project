@@ -5,7 +5,7 @@
 `timescale 1ns / 100ps
 
 module top(clk, rst, enable, switches, sign, ready, underflow, overflow,
-           inexact, exception, invalid 
+           inexact, exception, invalid, UART_TXD
 );
 
 input       clk;
@@ -20,7 +20,8 @@ output		underflow;
 output		overflow;
 output		inexact;
 output		exception;
-output		invalid;      
+output		invalid;   
+output      UART_TXD;   
 
 reg     [2:0] operation;
 reg     [2:0] op2;
@@ -68,7 +69,9 @@ int_log u5(
 );
 
 uart_out u6(
-    .inA(out), .CLK(clk), .mode(uart_mode)
+    .inA(out), .enable(enable),
+    .CLK(clk), .mode(uart_mode),
+    .UART_TXD(UART_TXD)
 );
     
 initial begin
