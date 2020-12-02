@@ -12,7 +12,7 @@ Final structure will be different, we'll need to have all the verilog files and 
 3. GPIO
    1. clone of source repo for diligent's I/O tutorials
 4. norm_logic
-   1. Brian's code for normal arithmetic, logic functions, and bit manipulations
+   1. Bryan's code for normal arithmetic, logic functions, and bit manipulations
 5. uart_try
    1. Vivado project to test UART code from GPIO
 

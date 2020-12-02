@@ -103,7 +103,7 @@ always @ (posedge clk) begin
         3'b000: begin
             if (printed) begin
                 uart_mode <= 0;
-                // "Please select a mode on swithces 2-0. Press button U18 when the mode is selected"                
+                // "Please select a mode on swithces 2-0. Press button U18 when the mode is selected"
                 uart_mode <= uart_mode +1;
                 // "000 for Floating Point, 001 for Binary Arthimatic, 010 for Bit Shifting, 011 for Binary Logic, 100 to Fetch a Stored Value, 101 to Store A Value"
                 printed <= 0;
