@@ -25,17 +25,17 @@ output      UART_TXD;
 
 reg     [2:0] operation;
 reg     [2:0] op2;
-wire     [63:0]  fp_out;
-wire     [63:0]  bit_manip_out;
-wire     [63:0]  int_calc_out;
-wire     [63:0]  int_logic_out;
+wire    [63:0]  fp_out;
+wire    [63:0]  bit_manip_out;
+wire    [63:0]  int_calc_out;
+wire    [63:0]  int_logic_out;
 reg     [63:0]  out;
 
 reg     [63:0]  opa, opb;
 reg     [1:0] size_sel; // 0: 16 bit. 1: 32 bit. 2: 64 bit.
 reg     [2:0] state; 
 reg     [255:0] memory;
-wire     enable_deb;
+wire    enable_deb;
 reg     [1:0] rmode;
 reg     printed;
 reg     [1:0] count;
@@ -87,7 +87,7 @@ initial begin
     uart_mode <= 19;
 end
     
-always @ (clk) begin
+always @ (posedge clk) begin
     
     if (rst) begin
 
@@ -103,12 +103,9 @@ always @ (clk) begin
         3'b000: begin
             if (printed) begin
                 uart_mode <= 0;
-                // $display($time,"Please select a mode on swithces 2-0. Press button U18 when the mode is selected");
-                // CHAR_ARRAY(0 to 79) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"61",X"20",X"6d",X"6f",X"64",X"65",X"20",X"6f",X"6e",X"20",X"73",X"77",X"69",X"74",X"68",X"63",X"65",X"73",X"20",X"32",X"2d",X"30",X"2e",X"20",X"50",X"72",X"65",X"73",X"73",X"20",X"62",X"75",X"74",X"74",X"6f",X"6e",X"20",X"55",X"31",X"38",X"20",X"77",X"68",X"65",X"6e",X"20",X"74",X"68",X"65",X"20",X"6d",X"6f",X"64",X"65",X"20",X"69",X"73",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"65",X"64");
-                
+                // "Please select a mode on swithces 2-0. Press button U18 when the mode is selected"                
                 uart_mode <= uart_mode +1;
-                //$display("000 for Floating Point, 001 for Binary Arthimatic, 010 for Bit Shifting, 011 for Binary Logic, 100 to Fetch a Stored Value, 101 to Store A Value");
-                // CHAR_ARRAY(0 to 143) := (X"30",X"30",X"30",X"20",X"66",X"6f",X"72",X"20",X"46",X"6c",X"6f",X"61",X"74",X"69",X"6e",X"67",X"20",X"50",X"6f",X"69",X"6e",X"74",X"2c",X"20",X"30",X"30",X"31",X"20",X"66",X"6f",X"72",X"20",X"42",X"69",X"6e",X"61",X"72",X"79",X"20",X"41",X"72",X"74",X"68",X"69",X"6d",X"61",X"74",X"69",X"63",X"2c",X"20",X"30",X"31",X"30",X"20",X"66",X"6f",X"72",X"20",X"42",X"69",X"74",X"20",X"53",X"68",X"69",X"66",X"74",X"69",X"6e",X"67",X"2c",X"20",X"30",X"31",X"31",X"20",X"66",X"6f",X"72",X"20",X"42",X"69",X"6e",X"61",X"72",X"79",X"20",X"4c",X"6f",X"67",X"69",X"63",X"2c",X"20",X"31",X"30",X"30",X"20",X"74",X"6f",X"20",X"46",X"65",X"74",X"63",X"68",X"20",X"61",X"20",X"53",X"74",X"6f",X"72",X"65",X"64",X"20",X"56",X"61",X"6c",X"75",X"65",X"2c",X"20",X"31",X"30",X"31",X"20",X"74",X"6f",X"20",X"53",X"74",X"6f",X"72",X"65",X"20",X"41",X"20",X"56",X"61",X"6c",X"75",X"65");
+                // "000 for Floating Point, 001 for Binary Arthimatic, 010 for Bit Shifting, 011 for Binary Logic, 100 to Fetch a Stored Value, 101 to Store A Value"
                 printed <= 0;
             end else if (enable_deb == 1'b1) begin
                 operation <= switches[2:0];
@@ -122,56 +119,44 @@ always @ (clk) begin
                 case (operation)
                 3'b000: begin
                     uart_mode <= uart_mode +1; 
-                    //$display($time,"Please select an FPU operation on switches 1-0. Then press U18 to confirm the mode");
-                    // CHAR_ARRAY(0 to 81) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"61",X"6e",X"20",X"46",X"50",X"55",X"20",X"6f",X"70",X"65",X"72",X"61",X"74",X"69",X"6f",X"6e",X"20",X"6f",X"6e",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"20",X"31",X"2d",X"30",X"2e",X"20",X"54",X"68",X"65",X"6e",X"20",X"70",X"72",X"65",X"73",X"73",X"20",X"55",X"31",X"38",X"20",X"74",X"6f",X"20",X"63",X"6f",X"6e",X"66",X"69",X"72",X"6d",X"20",X"74",X"68",X"65",X"20",X"6d",X"6f",X"64",X"65");
+                    // "Please select an FPU operation on switches 1-0. Then press U18 to confirm the mode"
                     uart_mode <= uart_mode +1;
-                    //$display("00: add. 01: sub. 10: mul. 11: div"); // op2
-                    // CHAR_ARRAY(0 to 33) := (X"30",X"30",X"3a",X"20",X"61",X"64",X"64",X"2e",X"20",X"30",X"31",X"3a",X"20",X"73",X"75",X"62",X"2e",X"20",X"31",X"30",X"3a",X"20",X"6d",X"75",X"6c",X"2e",X"20",X"31",X"31",X"3a",X"20",X"64",X"69",X"76");
+                    // "00: add. 01: sub. 10: mul. 11: div"
                 end
 
                 3'b001: begin
                     uart_mode <= uart_mode +1;
-                    //$display($time,"Please select a Arthimatic Operation on switches 2-0. Then press U18 to confirm the mode");
-                    // CHAR_ARRAY(0 to 87) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"61",X"20",X"41",X"72",X"74",X"68",X"69",X"6d",X"61",X"74",X"69",X"63",X"20",X"4f",X"70",X"65",X"72",X"61",X"74",X"69",X"6f",X"6e",X"20",X"6f",X"6e",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"20",X"32",X"2d",X"30",X"2e",X"20",X"54",X"68",X"65",X"6e",X"20",X"70",X"72",X"65",X"73",X"73",X"20",X"55",X"31",X"38",X"20",X"74",X"6f",X"20",X"63",X"6f",X"6e",X"66",X"69",X"72",X"6d",X"20",X"74",X"68",X"65",X"20",X"6d",X"6f",X"64",X"65");
+                    // "Please select a Arthimatic Operation on switches 2-0. Then press U18 to confirm the mode"
                     uart_mode <= uart_mode +1;
-                    //$display("000: add (A+B). 001: sub (A-B). 010: mul (A*B). 011: div (A/B). 100: rem (A % B)");
-                    // CHAR_ARRAY(0 to 79) := (X"30",X"30",X"30",X"3a",X"20",X"61",X"64",X"64",X"20",X"28",X"41",X"2b",X"42",X"29",X"2e",X"20",X"30",X"30",X"31",X"3a",X"20",X"73",X"75",X"62",X"20",X"28",X"41",X"2d",X"42",X"29",X"2e",X"20",X"30",X"31",X"30",X"3a",X"20",X"6d",X"75",X"6c",X"20",X"28",X"41",X"2a",X"42",X"29",X"2e",X"20",X"30",X"31",X"31",X"3a",X"20",X"64",X"69",X"76",X"20",X"28",X"41",X"2f",X"42",X"29",X"2e",X"20",X"31",X"30",X"30",X"3a",X"20",X"72",X"65",X"6d",X"20",X"28",X"41",X"20",X"25",X"20",X"42",X"29");
+                    // "000: add (A+B). 001: sub (A-B). 010: mul (A*B). 011: div (A/B). 100: rem (A % B)"
                 end
 
                 3'b010: begin
                     uart_mode <= uart_mode +1;
-                    //$display($time,"Please select a Bit Operation on switches 1-0. Then press U18 to confirm the mode");
-                    // CHAR_ARRAY(0 to 80) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"61",X"20",X"42",X"69",X"74",X"20",X"4f",X"70",X"65",X"72",X"61",X"74",X"69",X"6f",X"6e",X"20",X"6f",X"6e",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"20",X"31",X"2d",X"30",X"2e",X"20",X"54",X"68",X"65",X"6e",X"20",X"70",X"72",X"65",X"73",X"73",X"20",X"55",X"31",X"38",X"20",X"74",X"6f",X"20",X"63",X"6f",X"6e",X"66",X"69",X"72",X"6d",X"20",X"74",X"68",X"65",X"20",X"6d",X"6f",X"64",X"65");
+                    // "Please select a Bit Operation on switches 1-0. Then press U18 to confirm the mode"
                     uart_mode <= uart_mode +1;
-                    //$display("00: clear bit. 01: set bit. 10: get bit. 11: set output");
-                    // CHAR_ARRAY(0 to 54) := (X"30",X"30",X"3a",X"20",X"63",X"6c",X"65",X"61",X"72",X"20",X"62",X"69",X"74",X"2e",X"20",X"30",X"31",X"3a",X"20",X"73",X"65",X"74",X"20",X"62",X"69",X"74",X"2e",X"20",X"31",X"30",X"3a",X"20",X"67",X"65",X"74",X"20",X"62",X"69",X"74",X"2e",X"20",X"31",X"31",X"3a",X"20",X"73",X"65",X"74",X"20",X"6f",X"75",X"74",X"70",X"75",X"74");
+                    // "00: clear bit. 01: set bit. 10: get bit. 11: set output"
                 end
 
                 3'b011: begin
                     uart_mode <= uart_mode +1;
-                    //$display($time,"Please select a Binary Logic on switches 2-0. Then press U18 to confirm the mode");
-                    // CHAR_ARRAY(0 to 79) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"61",X"20",X"42",X"69",X"6e",X"61",X"72",X"79",X"20",X"4c",X"6f",X"67",X"69",X"63",X"20",X"6f",X"6e",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"20",X"32",X"2d",X"30",X"2e",X"20",X"54",X"68",X"65",X"6e",X"20",X"70",X"72",X"65",X"73",X"73",X"20",X"55",X"31",X"38",X"20",X"74",X"6f",X"20",X"63",X"6f",X"6e",X"66",X"69",X"72",X"6d",X"20",X"74",X"68",X"65",X"20",X"6d",X"6f",X"64",X"65");
+                    // "Please select a Binary Logic on switches 2-0. Then press U18 to confirm the mode"
                     uart_mode <= uart_mode +1;
-                    //$display("000: and (A&B). 001: nand ~(A&B). 010: or (AxB). 011: nor ~(AxB). 100: xor (A ^ B)). 101: xnor ~(A ^ B). 110: not (~A)");
-                    // CHAR_ARRAY(0 to 117) := (X"30",X"30",X"30",X"3a",X"20",X"61",X"6e",X"64",X"20",X"28",X"41",X"26",X"42",X"29",X"2e",X"20",X"30",X"30",X"31",X"3a",X"20",X"6e",X"61",X"6e",X"64",X"20",X"7e",X"28",X"41",X"26",X"42",X"29",X"2e",X"20",X"30",X"31",X"30",X"3a",X"20",X"6f",X"72",X"20",X"28",X"41",X"78",X"42",X"29",X"2e",X"20",X"30",X"31",X"31",X"3a",X"20",X"6e",X"6f",X"72",X"20",X"7e",X"28",X"41",X"78",X"42",X"29",X"2e",X"20",X"31",X"30",X"30",X"3a",X"20",X"78",X"6f",X"72",X"20",X"28",X"41",X"20",X"5e",X"20",X"42",X"29",X"29",X"2e",X"20",X"31",X"30",X"31",X"3a",X"20",X"78",X"6e",X"6f",X"72",X"20",X"7e",X"28",X"41",X"20",X"5e",X"20",X"42",X"29",X"2e",X"20",X"31",X"31",X"30",X"3a",X"20",X"6e",X"6f",X"74",X"20",X"28",X"7e",X"41",X"29");
+                    // "000: and (A&B). 001: nand ~(A&B). 010: or (AxB). 011: nor ~(AxB). 100: xor (A ^ B)). 101: xnor ~(A ^ B). 110: not (~A)"
                 end
 
                 3'b100: begin
                     uart_mode <= uart_mode +1;
-                    //$display($time,"Store a value");
-                    // CHAR_ARRAY(0 to 12) := (X"53",X"74",X"6f",X"72",X"65",X"20",X"61",X"20",X"76",X"61",X"6c",X"75",X"65");
+                    // "Store a value"
                     uart_mode <= uart_mode +1;
-                    //$display($time,"Please select either reg A (00), B (01), C (10) or D (11) by using switches 1-0");
-                    // CHAR_ARRAY(0 to 78) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"65",X"69",X"74",X"68",X"65",X"72",X"20",X"72",X"65",X"67",X"20",X"41",X"20",X"28",X"30",X"30",X"29",X"2c",X"20",X"42",X"20",X"28",X"30",X"31",X"29",X"2c",X"20",X"43",X"20",X"28",X"31",X"30",X"29",X"20",X"6f",X"72",X"20",X"44",X"20",X"28",X"31",X"31",X"29",X"20",X"62",X"79",X"20",X"75",X"73",X"69",X"6e",X"67",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"20",X"31",X"2d",X"30");
+                    // "Please select either reg A (00), B (01), C (10) or D (11) by using switches 1-0"
                 end
 
                 3'b101: begin
                     uart_mode <= uart_mode +1;
-                    //$display($time,"Fetch a value");
-                    // CHAR_ARRAY(0 to 12) := (X"46",X"65",X"74",X"63",X"68",X"20",X"61",X"20",X"76",X"61",X"6c",X"75",X"65");
+                    // "Fetch a value"
                     uart_mode <= uart_mode +1;
-                    //$display("Please select either reg A (00), B (01), C (10) or D (11) by using switches 1-0");
-                    // CHAR_ARRAY(0 to 78) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"65",X"69",X"74",X"68",X"65",X"72",X"20",X"72",X"65",X"67",X"20",X"41",X"20",X"28",X"30",X"30",X"29",X"2c",X"20",X"42",X"20",X"28",X"30",X"31",X"29",X"2c",X"20",X"43",X"20",X"28",X"31",X"30",X"29",X"20",X"6f",X"72",X"20",X"44",X"20",X"28",X"31",X"31",X"29",X"20",X"62",X"79",X"20",X"75",X"73",X"69",X"6e",X"67",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"20",X"31",X"2d",X"30");
+                    // "Please select either reg A (00), B (01), C (10) or D (11) by using switches 1-0"
                 end
                 endcase
                 printed <= 0;
@@ -186,11 +171,9 @@ always @ (clk) begin
         3'b010: begin
             if (printed) begin
                 uart_mode <= uart_mode +1;
-                //$display($time,"Please select a bit-size");
-                // CHAR_ARRAY(0 to 23) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"61",X"20",X"62",X"69",X"74",X"2d",X"73",X"69",X"7a",X"65");
+                // "Please select a bit-size"
                 uart_mode <= uart_mode +1;
-                //$display("000 for 16-bit inputs, 001 for 32-bit inputs, 011 for 64-bit inputs");
-                // CHAR_ARRAY(0 to 66) := (X"30",X"30",X"30",X"20",X"66",X"6f",X"72",X"20",X"31",X"36",X"2d",X"62",X"69",X"74",X"20",X"69",X"6e",X"70",X"75",X"74",X"73",X"2c",X"20",X"30",X"30",X"31",X"20",X"66",X"6f",X"72",X"20",X"33",X"32",X"2d",X"62",X"69",X"74",X"20",X"69",X"6e",X"70",X"75",X"74",X"73",X"2c",X"20",X"30",X"31",X"31",X"20",X"66",X"6f",X"72",X"20",X"36",X"34",X"2d",X"62",X"69",X"74",X"20",X"69",X"6e",X"70",X"75",X"74",X"73");
+                // "000 for 16-bit inputs, 001 for 32-bit inputs, 011 for 64-bit inputs"
                 printed <= 0;
             
             end else if (enable_deb == 1'b1) begin
@@ -204,8 +187,7 @@ always @ (clk) begin
         3'b011:begin
             if (printed) begin
                 uart_mode <= uart_mode +1;
-                //$display($time,"Please place input A on the switches");
-                // CHAR_ARRAY(0 to 35) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"70",X"6c",X"61",X"63",X"65",X"20",X"69",X"6e",X"70",X"75",X"74",X"20",X"41",X"20",X"6f",X"6e",X"20",X"74",X"68",X"65",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73");
+                // "Please place input A on the switches"
                 printed <= 0;
                 count <= 0;
             end else if ((count <= size_sel) && (enable_deb == 1'b1)) begin
@@ -229,8 +211,7 @@ always @ (clk) begin
         3'b100:begin
             if (printed) begin
                 uart_mode <= uart_mode +1;
-                //$display($time,"Please place input B on the switches");
-                // CHAR_ARRAY(0 to 35) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"70",X"6c",X"61",X"63",X"65",X"20",X"69",X"6e",X"70",X"75",X"74",X"20",X"42",X"20",X"6f",X"6e",X"20",X"74",X"68",X"65",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73");
+                // "Please place input B on the switches"
                 printed <= 0;
                 count <= 0;
             end else if (count <= size_sel && enable_deb == 1'b1) begin
@@ -280,8 +261,7 @@ always @ (clk) begin
             
             uart_mode <= uart_mode +1;
             uart_mode <= uart_mode +1;
-            //$display($time,"Output = ",out);
-            // CHAR_ARRAY(0 to 8) := (X"4f",X"75",X"74",X"70",X"75",X"74",X"20",X"3d",X"20");
+            // "Output = "
             state <= 0;
             uart_mode <= 0;
         end 

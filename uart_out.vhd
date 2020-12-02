@@ -361,8 +361,8 @@ begin
                     sendStr(0 to 8) <= in_18; 
                     strEnd <= in_18_str_len;
                 when others =>
-                    sendStr(0 to 63) <= outA; --  WELCOME_STR;
-                    strEnd <= OUTA_STR_LEN; --WELCOME_STR_LEN;
+                    sendStr(0 to 63) <= outA; --  result;
+                    strEnd <= OUTA_STR_LEN; --result;
             end case;
         end if;
 	end if;

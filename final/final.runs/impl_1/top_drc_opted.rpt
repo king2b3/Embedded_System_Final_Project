@@ -1,7 +1,7 @@
 Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
 ------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2020.1 (win64) Build 2902540 Wed May 27 19:54:49 MDT 2020
-| Date         : Wed Dec  2 17:44:51 2020
+| Date         : Wed Dec  2 18:00:15 2020
 | Host         : DESKTOP-IAE150N running 64-bit major release  (build 9200)
 | Command      : report_drc -file top_drc_opted.rpt -pb top_drc_opted.pb -rpx top_drc_opted.rpx
 | Design       : top
@@ -24,12 +24,12 @@ Table of Contents
       Design limits: <entire design considered>
            Ruledeck: default
              Max violations: <unlimited>
-             Violations found: 36
+             Violations found: 34
 +----------+----------+-----------------------------------------------------+------------+
 | Rule     | Severity | Description                                         | Violations |
 +----------+----------+-----------------------------------------------------+------------+
 | CFGBVS-1 | Warning  | Missing CFGBVS and CONFIG_VOLTAGE Design Properties | 1          |
-| DPIP-1   | Warning  | Input pipelining                                    | 23         |
+| DPIP-1   | Warning  | Input pipelining                                    | 21         |
 | DPOP-1   | Warning  | PREG Output pipelining                              | 6          |
 | DPOP-2   | Warning  | MREG Output pipelining                              | 6          |
 +----------+----------+-----------------------------------------------------+------------+
@@ -81,85 +81,75 @@ Related violations: <none>
 
 DPIP-1#7 Warning
 Input pipelining  
-DSP u4/out_temp0__0 input u4/out_temp0__0/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+DSP u4/out_temp0__1 input u4/out_temp0__1/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
 Related violations: <none>
 
 DPIP-1#8 Warning
 Input pipelining  
-DSP u4/out_temp0__1 input u4/out_temp0__1/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+DSP u4/out_temp0__1 input u4/out_temp0__1/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
 Related violations: <none>
 
 DPIP-1#9 Warning
 Input pipelining  
-DSP u4/out_temp0__1 input u4/out_temp0__1/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+DSP u4/out_temp0__2 input u4/out_temp0__2/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
 Related violations: <none>
 
 DPIP-1#10 Warning
 Input pipelining  
-DSP u4/out_temp0__2 input u4/out_temp0__2/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+DSP u4/out_temp0__2 input u4/out_temp0__2/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
 Related violations: <none>
 
 DPIP-1#11 Warning
 Input pipelining  
-DSP u4/out_temp0__2 input u4/out_temp0__2/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+DSP u4/out_temp0__3 input u4/out_temp0__3/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
 Related violations: <none>
 
 DPIP-1#12 Warning
 Input pipelining  
-DSP u4/out_temp0__3 input u4/out_temp0__3/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+DSP u4/out_temp0__4 input u4/out_temp0__4/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
 Related violations: <none>
 
 DPIP-1#13 Warning
 Input pipelining  
-DSP u4/out_temp0__3 input u4/out_temp0__3/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+DSP u4/out_temp0__4 input u4/out_temp0__4/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
 Related violations: <none>
 
 DPIP-1#14 Warning
 Input pipelining  
-DSP u4/out_temp0__4 input u4/out_temp0__4/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+DSP u4/out_temp0__5 input u4/out_temp0__5/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
 Related violations: <none>
 
 DPIP-1#15 Warning
 Input pipelining  
-DSP u4/out_temp0__4 input u4/out_temp0__4/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+DSP u4/out_temp0__5 input u4/out_temp0__5/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
 Related violations: <none>
 
 DPIP-1#16 Warning
 Input pipelining  
-DSP u4/out_temp0__5 input u4/out_temp0__5/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+DSP u4/out_temp0__6 input u4/out_temp0__6/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
 Related violations: <none>
 
 DPIP-1#17 Warning
 Input pipelining  
-DSP u4/out_temp0__5 input u4/out_temp0__5/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+DSP u4/out_temp0__6 input u4/out_temp0__6/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
 Related violations: <none>
 
 DPIP-1#18 Warning
 Input pipelining  
-DSP u4/out_temp0__6 input u4/out_temp0__6/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+DSP u4/out_temp0__7 input u4/out_temp0__7/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
 Related violations: <none>
 
 DPIP-1#19 Warning
 Input pipelining  
-DSP u4/out_temp0__6 input u4/out_temp0__6/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+DSP u4/out_temp0__7 input u4/out_temp0__7/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
 Related violations: <none>
 
 DPIP-1#20 Warning
 Input pipelining  
-DSP u4/out_temp0__7 input u4/out_temp0__7/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
-Related violations: <none>
-
-DPIP-1#21 Warning
-Input pipelining  
-DSP u4/out_temp0__7 input u4/out_temp0__7/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
-Related violations: <none>
-
-DPIP-1#22 Warning
-Input pipelining  
 DSP u4/out_temp0__8 input u4/out_temp0__8/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
 Related violations: <none>
 
-DPIP-1#23 Warning
+DPIP-1#21 Warning
 Input pipelining  
 DSP u4/out_temp0__8 input u4/out_temp0__8/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
 Related violations: <none>
