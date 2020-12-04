@@ -13,6 +13,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use ieee.numeric_std.all;
 
+
 --The IEEE.std_logic_unsigned contains definitions that allow 
 --std_logic_vector types to be used with the + operator to instantiate a 
 --counter.
@@ -60,7 +61,6 @@ signal inA_mod : STD_LOGIC_VECTOR (63 downto 0);
 constant TMR_CNTR_MAX : std_logic_vector(26 downto 0) := "101111101011110000100000000"; --100,000,000 = clk cycles per second
 constant TMR_VAL_MAX : std_logic_vector(3 downto 0) := "1001"; --9
 constant RESET_CNTR_MAX : std_logic_vector(17 downto 0) := "110000110101000000";-- 100,000,000 * 0.002 = 200,000 = clk cycles per 2 ms
-
 
 constant MAX_STR_LEN : integer := 230;
 constant OUTA_STR_LEN : natural := 64;

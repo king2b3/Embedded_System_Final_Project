@@ -43,6 +43,7 @@ reg     sign_temp;
 reg     [4:0] uart_mode;
 reg     if_button_press;
 
+
 debouncer u1 (
     .pb_1(enable), .clk(clk), .pb_out(enable_deb)
 );
@@ -111,6 +112,7 @@ always @ (posedge clk) begin
             end else if (enable_deb == 1'b1)
                 if_button_press <= 1;
             else if (if_button_press == 1'b1) begin
+
                 operation <= switches[2:0];
                 state <= 3'b001;
                 printed <= 1;
@@ -151,6 +153,7 @@ always @ (posedge clk) begin
                 if_button_press <= 1;
             else if (if_button_press == 1'b1) begin
                 if_button_press <= 0;
+
                 op2 <= switches[2:0];
                 state <= 3'b010;
                 printed <= 1;
@@ -160,6 +163,7 @@ always @ (posedge clk) begin
         
         3'b010: begin
             if (printed) begin
+
                 uart_mode <= 7;
                 // "Please select a bit-size"
                 // "000 for 16-bit inputs, 001 for 32-bit inputs, 011 for 64-bit inputs"
@@ -192,6 +196,7 @@ always @ (posedge clk) begin
                 endcase
                 count <= count+1;
                 if_button_press <= 0;
+
             end else if (count > size_sel) begin
                 if (operation == 3'b1XX || (operation == 3'b001 && op2 == 3'b101) || (operation == 3'b011 && op2 == 3'b110)) 
                     state = 3'b101;
@@ -211,6 +216,7 @@ always @ (posedge clk) begin
             end else if (enable_deb == 1'b1)
                 if_button_press <= 1;
             else if (if_button_press == 1'b1 && count <= size_sel) begin
+
                 case (count)
                 2'b00:  opb[15:0] = switches;
                 2'b01:  opb[31:16] = switches;
