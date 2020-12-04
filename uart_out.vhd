@@ -11,6 +11,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use ieee.numeric_std.all;
 
 --The IEEE.std_logic_unsigned contains definitions that allow 
 --std_logic_vector types to be used with the + operator to instantiate a 
@@ -19,7 +20,7 @@ use IEEE.std_logic_unsigned.all;
 
 entity uart_out is
     Port (
-        inA 			: in  STD_LOGIC_VECTOR (63 downto 0);
+        inA 			: in  integer;
         enable 			: in  STD_LOGIC;
         CLK 			: in  STD_LOGIC;
         mode            : in integer;
@@ -54,12 +55,14 @@ type UART_STATE_TYPE is (RST_REG, LD_INIT_STR, SEND_CHAR, RDY_LOW, WAIT_RDY, WAI
 
 type CHAR_ARRAY is array (integer range<>) of std_logic_vector(7 downto 0);
 
+signal inA_mod : STD_LOGIC_VECTOR (63 downto 0);
+
 constant TMR_CNTR_MAX : std_logic_vector(26 downto 0) := "101111101011110000100000000"; --100,000,000 = clk cycles per second
 constant TMR_VAL_MAX : std_logic_vector(3 downto 0) := "1001"; --9
 constant RESET_CNTR_MAX : std_logic_vector(17 downto 0) := "110000110101000000";-- 100,000,000 * 0.002 = 200,000 = clk cycles per 2 ms
 
 
-constant MAX_STR_LEN : integer := 144;
+constant MAX_STR_LEN : integer := 230;
 constant OUTA_STR_LEN : natural := 64;
 
 ------------------------
@@ -67,95 +70,66 @@ constant OUTA_STR_LEN : natural := 64;
 ------------------------
 
 -- Please select a mode on swithces 2-0. Press button U18 when the mode is selected
-constant in_0 : CHAR_ARRAY(0 to 79) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"61",X"20",X"6d",X"6f",X"64",X"65",X"20",X"6f",X"6e",X"20",X"73",X"77",X"69",X"74",X"68",X"63",X"65",X"73",X"20",X"32",X"2d",X"30",X"2e",X"20",X"50",X"72",X"65",X"73",X"73",X"20",X"62",X"75",X"74",X"74",X"6f",X"6e",X"20",X"55",X"31",X"38",X"20",X"77",X"68",X"65",X"6e",X"20",X"74",X"68",X"65",X"20",X"6d",X"6f",X"64",X"65",X"20",X"69",X"73",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"65",X"64");
-constant in_0_str_len : natural := 80;
-
 -- 000 for Floating Point, 001 for Binary Arthimatic, 010 for Bit Shifting, 011 for Binary Logic, 100 to Fetch a Stored Value, 101 to Store A Value
-constant in_1 : CHAR_ARRAY(0 to 143) := (X"30",X"30",X"30",X"20",X"66",X"6f",X"72",X"20",X"46",X"6c",X"6f",X"61",X"74",X"69",X"6e",X"67",X"20",X"50",X"6f",X"69",X"6e",X"74",X"2c",X"20",X"30",X"30",X"31",X"20",X"66",X"6f",X"72",X"20",X"42",X"69",X"6e",X"61",X"72",X"79",X"20",X"41",X"72",X"74",X"68",X"69",X"6d",X"61",X"74",X"69",X"63",X"2c",X"20",X"30",X"31",X"30",X"20",X"66",X"6f",X"72",X"20",X"42",X"69",X"74",X"20",X"53",X"68",X"69",X"66",X"74",X"69",X"6e",X"67",X"2c",X"20",X"30",X"31",X"31",X"20",X"66",X"6f",X"72",X"20",X"42",X"69",X"6e",X"61",X"72",X"79",X"20",X"4c",X"6f",X"67",X"69",X"63",X"2c",X"20",X"31",X"30",X"30",X"20",X"74",X"6f",X"20",X"46",X"65",X"74",X"63",X"68",X"20",X"61",X"20",X"53",X"74",X"6f",X"72",X"65",X"64",X"20",X"56",X"61",X"6c",X"75",X"65",X"2c",X"20",X"31",X"30",X"31",X"20",X"74",X"6f",X"20",X"53",X"74",X"6f",X"72",X"65",X"20",X"41",X"20",X"56",X"61",X"6c",X"75",X"65");
-constant in_1_str_len : natural := 144;
+constant in_0 : CHAR_ARRAY(0 to 229) := (X"0A",X"0D",X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"61",X"20",X"6d",X"6f",X"64",X"65",X"20",X"6f",X"6e",X"20",X"73",X"77",X"69",X"74",X"68",X"63",X"65",X"73",X"20",X"32",X"2d",X"30",X"2e",X"20",X"50",X"72",X"65",X"73",X"73",X"20",X"62",X"75",X"74",X"74",X"6f",X"6e",X"20",X"55",X"31",X"38",X"20",X"77",X"68",X"65",X"6e",X"20",X"74",X"68",X"65",X"20",X"6d",X"6f",X"64",X"65",X"20",X"69",X"73",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"65",X"64",X"0A",X"0D",X"30",X"30",X"30",X"20",X"66",X"6f",X"72",X"20",X"46",X"6c",X"6f",X"61",X"74",X"69",X"6e",X"67",X"20",X"50",X"6f",X"69",X"6e",X"74",X"2c",X"20",X"30",X"30",X"31",X"20",X"66",X"6f",X"72",X"20",X"42",X"69",X"6e",X"61",X"72",X"79",X"20",X"41",X"72",X"74",X"68",X"69",X"6d",X"61",X"74",X"69",X"63",X"2c",X"20",X"30",X"31",X"30",X"20",X"66",X"6f",X"72",X"20",X"42",X"69",X"74",X"20",X"53",X"68",X"69",X"66",X"74",X"69",X"6e",X"67",X"2c",X"20",X"30",X"31",X"31",X"20",X"66",X"6f",X"72",X"20",X"42",X"69",X"6e",X"61",X"72",X"79",X"20",X"4c",X"6f",X"67",X"69",X"63",X"2c",X"20",X"31",X"30",X"30",X"20",X"74",X"6f",X"20",X"46",X"65",X"74",X"63",X"68",X"20",X"61",X"20",X"53",X"74",X"6f",X"72",X"65",X"64",X"20",X"56",X"61",X"6c",X"75",X"65",X"2c",X"20",X"31",X"30",X"31",X"20",X"74",X"6f",X"20",X"53",X"74",X"6f",X"72",X"65",X"20",X"41",X"20",X"56",X"61",X"6c",X"75",X"65",X"0A",X"0D");
+constant in_0_str_len : natural := 230;
 
 -- Please select an FPU operation on switches 1-0. Then press U18 to confirm the mode
-constant in_2 : CHAR_ARRAY(0 to 81) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"61",X"6e",X"20",X"46",X"50",X"55",X"20",X"6f",X"70",X"65",X"72",X"61",X"74",X"69",X"6f",X"6e",X"20",X"6f",X"6e",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"20",X"31",X"2d",X"30",X"2e",X"20",X"54",X"68",X"65",X"6e",X"20",X"70",X"72",X"65",X"73",X"73",X"20",X"55",X"31",X"38",X"20",X"74",X"6f",X"20",X"63",X"6f",X"6e",X"66",X"69",X"72",X"6d",X"20",X"74",X"68",X"65",X"20",X"6d",X"6f",X"64",X"65");
-constant in_2_str_len : natural := 82;
-
 -- 00: add. 01: sub. 10: mul. 11: div
-constant in_3 : CHAR_ARRAY(0 to 33) := (X"30",X"30",X"3a",X"20",X"61",X"64",X"64",X"2e",X"20",X"30",X"31",X"3a",X"20",X"73",X"75",X"62",X"2e",X"20",X"31",X"30",X"3a",X"20",X"6d",X"75",X"6c",X"2e",X"20",X"31",X"31",X"3a",X"20",X"64",X"69",X"76");
-constant in_3_str_len : natural := 34;
+constant in_1 : CHAR_ARRAY(0 to 119) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"61",X"6e",X"20",X"46",X"50",X"55",X"20",X"6f",X"70",X"65",X"72",X"61",X"74",X"69",X"6f",X"6e",X"20",X"6f",X"6e",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"20",X"31",X"2d",X"30",X"2e",X"20",X"54",X"68",X"65",X"6e",X"20",X"70",X"72",X"65",X"73",X"73",X"20",X"55",X"31",X"38",X"20",X"74",X"6f",X"20",X"63",X"6f",X"6e",X"66",X"69",X"72",X"6d",X"20",X"74",X"68",X"65",X"20",X"6d",X"6f",X"64",X"65",X"0A",X"0D",X"30",X"30",X"3a",X"20",X"61",X"64",X"64",X"2e",X"20",X"30",X"31",X"3a",X"20",X"73",X"75",X"62",X"2e",X"20",X"31",X"30",X"3a",X"20",X"6d",X"75",X"6c",X"2e",X"20",X"31",X"31",X"3a",X"20",X"64",X"69",X"76",X"0A",X"0D");
+constant in_1_str_len : natural := 120;
 
 -- Please select a Arthimatic Operation on switches 2-0. Then press U18 to confirm the mode
-constant in_4 : CHAR_ARRAY(0 to 87) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"61",X"20",X"41",X"72",X"74",X"68",X"69",X"6d",X"61",X"74",X"69",X"63",X"20",X"4f",X"70",X"65",X"72",X"61",X"74",X"69",X"6f",X"6e",X"20",X"6f",X"6e",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"20",X"32",X"2d",X"30",X"2e",X"20",X"54",X"68",X"65",X"6e",X"20",X"70",X"72",X"65",X"73",X"73",X"20",X"55",X"31",X"38",X"20",X"74",X"6f",X"20",X"63",X"6f",X"6e",X"66",X"69",X"72",X"6d",X"20",X"74",X"68",X"65",X"20",X"6d",X"6f",X"64",X"65");
-constant in_4_str_len : natural := 88;
-
 -- 000: add (A+B). 001: sub (A-B). 010: mul (A*B). 011: div (A/B). 100: rem (A % B)
-constant in_5 : CHAR_ARRAY(0 to 79) := (X"30",X"30",X"30",X"3a",X"20",X"61",X"64",X"64",X"20",X"28",X"41",X"2b",X"42",X"29",X"2e",X"20",X"30",X"30",X"31",X"3a",X"20",X"73",X"75",X"62",X"20",X"28",X"41",X"2d",X"42",X"29",X"2e",X"20",X"30",X"31",X"30",X"3a",X"20",X"6d",X"75",X"6c",X"20",X"28",X"41",X"2a",X"42",X"29",X"2e",X"20",X"30",X"31",X"31",X"3a",X"20",X"64",X"69",X"76",X"20",X"28",X"41",X"2f",X"42",X"29",X"2e",X"20",X"31",X"30",X"30",X"3a",X"20",X"72",X"65",X"6d",X"20",X"28",X"41",X"20",X"25",X"20",X"42",X"29");
-constant in_5_str_len : natural := 80;
+constant in_2 : CHAR_ARRAY(0 to 171) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"61",X"20",X"41",X"72",X"74",X"68",X"69",X"6d",X"61",X"74",X"69",X"63",X"20",X"4f",X"70",X"65",X"72",X"61",X"74",X"69",X"6f",X"6e",X"20",X"6f",X"6e",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"20",X"32",X"2d",X"30",X"2e",X"20",X"54",X"68",X"65",X"6e",X"20",X"70",X"72",X"65",X"73",X"73",X"20",X"55",X"31",X"38",X"20",X"74",X"6f",X"20",X"63",X"6f",X"6e",X"66",X"69",X"72",X"6d",X"20",X"74",X"68",X"65",X"20",X"6d",X"6f",X"64",X"65",X"0A",X"0D",X"30",X"30",X"30",X"3a",X"20",X"61",X"64",X"64",X"20",X"28",X"41",X"2b",X"42",X"29",X"2e",X"20",X"30",X"30",X"31",X"3a",X"20",X"73",X"75",X"62",X"20",X"28",X"41",X"2d",X"42",X"29",X"2e",X"20",X"30",X"31",X"30",X"3a",X"20",X"6d",X"75",X"6c",X"20",X"28",X"41",X"2a",X"42",X"29",X"2e",X"20",X"30",X"31",X"31",X"3a",X"20",X"64",X"69",X"76",X"20",X"28",X"41",X"2f",X"42",X"29",X"2e",X"20",X"31",X"30",X"30",X"3a",X"20",X"72",X"65",X"6d",X"20",X"28",X"41",X"20",X"25",X"20",X"42",X"29",X"0A",X"0D");
+constant in_2_str_len : natural := 172;
 
 -- Please select a Bit Operation on switches 1-0. Then press U18 to confirm the mode
-constant in_6 : CHAR_ARRAY(0 to 80) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"61",X"20",X"42",X"69",X"74",X"20",X"4f",X"70",X"65",X"72",X"61",X"74",X"69",X"6f",X"6e",X"20",X"6f",X"6e",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"20",X"31",X"2d",X"30",X"2e",X"20",X"54",X"68",X"65",X"6e",X"20",X"70",X"72",X"65",X"73",X"73",X"20",X"55",X"31",X"38",X"20",X"74",X"6f",X"20",X"63",X"6f",X"6e",X"66",X"69",X"72",X"6d",X"20",X"74",X"68",X"65",X"20",X"6d",X"6f",X"64",X"65");
-constant in_6_str_len : natural := 81;
-
 -- 00: clear bit. 01: set bit. 10: get bit. 11: set output
-constant in_7 : CHAR_ARRAY(0 to 54) := (X"30",X"30",X"3a",X"20",X"63",X"6c",X"65",X"61",X"72",X"20",X"62",X"69",X"74",X"2e",X"20",X"30",X"31",X"3a",X"20",X"73",X"65",X"74",X"20",X"62",X"69",X"74",X"2e",X"20",X"31",X"30",X"3a",X"20",X"67",X"65",X"74",X"20",X"62",X"69",X"74",X"2e",X"20",X"31",X"31",X"3a",X"20",X"73",X"65",X"74",X"20",X"6f",X"75",X"74",X"70",X"75",X"74");
-constant in_7_str_len : natural := 55;
+constant in_3 : CHAR_ARRAY(0 to 139) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"61",X"20",X"42",X"69",X"74",X"20",X"4f",X"70",X"65",X"72",X"61",X"74",X"69",X"6f",X"6e",X"20",X"6f",X"6e",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"20",X"31",X"2d",X"30",X"2e",X"20",X"54",X"68",X"65",X"6e",X"20",X"70",X"72",X"65",X"73",X"73",X"20",X"55",X"31",X"38",X"20",X"74",X"6f",X"20",X"63",X"6f",X"6e",X"66",X"69",X"72",X"6d",X"20",X"74",X"68",X"65",X"20",X"6d",X"6f",X"64",X"65",X"0A",X"0D",X"30",X"30",X"3a",X"20",X"63",X"6c",X"65",X"61",X"72",X"20",X"62",X"69",X"74",X"2e",X"20",X"30",X"31",X"3a",X"20",X"73",X"65",X"74",X"20",X"62",X"69",X"74",X"2e",X"20",X"31",X"30",X"3a",X"20",X"67",X"65",X"74",X"20",X"62",X"69",X"74",X"2e",X"20",X"31",X"31",X"3a",X"20",X"73",X"65",X"74",X"20",X"6f",X"75",X"74",X"70",X"75",X"74",X"0A",X"0D");
+constant in_3_str_len : natural := 140;
 
 -- Please select a Binary Logic on switches 2-0. Then press U18 to confirm the mode
-constant in_8 : CHAR_ARRAY(0 to 79) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"61",X"20",X"42",X"69",X"6e",X"61",X"72",X"79",X"20",X"4c",X"6f",X"67",X"69",X"63",X"20",X"6f",X"6e",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"20",X"32",X"2d",X"30",X"2e",X"20",X"54",X"68",X"65",X"6e",X"20",X"70",X"72",X"65",X"73",X"73",X"20",X"55",X"31",X"38",X"20",X"74",X"6f",X"20",X"63",X"6f",X"6e",X"66",X"69",X"72",X"6d",X"20",X"74",X"68",X"65",X"20",X"6d",X"6f",X"64",X"65");
-constant in_8_str_len : natural := 80;
-
 -- 000: and (A&B). 001: nand ~(A&B). 010: or (AxB). 011: nor ~(AxB). 100: xor (A ^ B)). 101: xnor ~(A ^ B). 110: not (~A)
-constant in_9 : CHAR_ARRAY(0 to 117) := (X"30",X"30",X"30",X"3a",X"20",X"61",X"6e",X"64",X"20",X"28",X"41",X"26",X"42",X"29",X"2e",X"20",X"30",X"30",X"31",X"3a",X"20",X"6e",X"61",X"6e",X"64",X"20",X"7e",X"28",X"41",X"26",X"42",X"29",X"2e",X"20",X"30",X"31",X"30",X"3a",X"20",X"6f",X"72",X"20",X"28",X"41",X"78",X"42",X"29",X"2e",X"20",X"30",X"31",X"31",X"3a",X"20",X"6e",X"6f",X"72",X"20",X"7e",X"28",X"41",X"78",X"42",X"29",X"2e",X"20",X"31",X"30",X"30",X"3a",X"20",X"78",X"6f",X"72",X"20",X"28",X"41",X"20",X"5e",X"20",X"42",X"29",X"29",X"2e",X"20",X"31",X"30",X"31",X"3a",X"20",X"78",X"6e",X"6f",X"72",X"20",X"7e",X"28",X"41",X"20",X"5e",X"20",X"42",X"29",X"2e",X"20",X"31",X"31",X"30",X"3a",X"20",X"6e",X"6f",X"74",X"20",X"28",X"7e",X"41",X"29");
-constant in_9_str_len : natural := 118;
+constant in_4 : CHAR_ARRAY(0 to 201) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"61",X"20",X"42",X"69",X"6e",X"61",X"72",X"79",X"20",X"4c",X"6f",X"67",X"69",X"63",X"20",X"6f",X"6e",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"20",X"32",X"2d",X"30",X"2e",X"20",X"54",X"68",X"65",X"6e",X"20",X"70",X"72",X"65",X"73",X"73",X"20",X"55",X"31",X"38",X"20",X"74",X"6f",X"20",X"63",X"6f",X"6e",X"66",X"69",X"72",X"6d",X"20",X"74",X"68",X"65",X"20",X"6d",X"6f",X"64",X"65",X"0A",X"0D",X"30",X"30",X"30",X"3a",X"20",X"61",X"6e",X"64",X"20",X"28",X"41",X"26",X"42",X"29",X"2e",X"20",X"30",X"30",X"31",X"3a",X"20",X"6e",X"61",X"6e",X"64",X"20",X"7e",X"28",X"41",X"26",X"42",X"29",X"2e",X"20",X"30",X"31",X"30",X"3a",X"20",X"6f",X"72",X"20",X"28",X"41",X"78",X"42",X"29",X"2e",X"20",X"30",X"31",X"31",X"3a",X"20",X"6e",X"6f",X"72",X"20",X"7e",X"28",X"41",X"78",X"42",X"29",X"2e",X"20",X"31",X"30",X"30",X"3a",X"20",X"78",X"6f",X"72",X"20",X"28",X"41",X"20",X"5e",X"20",X"42",X"29",X"29",X"2e",X"20",X"31",X"30",X"31",X"3a",X"20",X"78",X"6e",X"6f",X"72",X"20",X"7e",X"28",X"41",X"20",X"5e",X"20",X"42",X"29",X"2e",X"20",X"31",X"31",X"30",X"3a",X"20",X"6e",X"6f",X"74",X"20",X"28",X"7e",X"41",X"29",X"0A",X"0D");
+constant in_4_str_len : natural := 202;
 
 -- Store a value
-constant in_10 : CHAR_ARRAY(0 to 12) := (X"53",X"74",X"6f",X"72",X"65",X"20",X"61",X"20",X"76",X"61",X"6c",X"75",X"65");
-constant in_10_str_len : natural := 13;
-
 -- Please select either reg A (00), B (01), C (10) or D (11) by using switches 1-0
-constant in_11 : CHAR_ARRAY(0 to 78) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"65",X"69",X"74",X"68",X"65",X"72",X"20",X"72",X"65",X"67",X"20",X"41",X"20",X"28",X"30",X"30",X"29",X"2c",X"20",X"42",X"20",X"28",X"30",X"31",X"29",X"2c",X"20",X"43",X"20",X"28",X"31",X"30",X"29",X"20",X"6f",X"72",X"20",X"44",X"20",X"28",X"31",X"31",X"29",X"20",X"62",X"79",X"20",X"75",X"73",X"69",X"6e",X"67",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"20",X"31",X"2d",X"30");
-constant in_11_str_len : natural := 79;
+constant in_5 : CHAR_ARRAY(0 to 95) := (X"53",X"74",X"6f",X"72",X"65",X"20",X"61",X"20",X"76",X"61",X"6c",X"75",X"65",X"0A",X"0D",X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"65",X"69",X"74",X"68",X"65",X"72",X"20",X"72",X"65",X"67",X"20",X"41",X"20",X"28",X"30",X"30",X"29",X"2c",X"20",X"42",X"20",X"28",X"30",X"31",X"29",X"2c",X"20",X"43",X"20",X"28",X"31",X"30",X"29",X"20",X"6f",X"72",X"20",X"44",X"20",X"28",X"31",X"31",X"29",X"20",X"62",X"79",X"20",X"75",X"73",X"69",X"6e",X"67",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"20",X"31",X"2d",X"30",X"0A",X"0D");
+constant in_5_or_6_str_len : natural := 96;
 
 -- Fetch a value
-constant in_12 : CHAR_ARRAY(0 to 12) := (X"46",X"65",X"74",X"63",X"68",X"20",X"61",X"20",X"76",X"61",X"6c",X"75",X"65");
-constant in_12_str_len : natural := 13;
-
 -- Please select either reg A (00), B (01), C (10) or D (11) by using switches 1-0
-constant in_13 : CHAR_ARRAY(0 to 78) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"65",X"69",X"74",X"68",X"65",X"72",X"20",X"72",X"65",X"67",X"20",X"41",X"20",X"28",X"30",X"30",X"29",X"2c",X"20",X"42",X"20",X"28",X"30",X"31",X"29",X"2c",X"20",X"43",X"20",X"28",X"31",X"30",X"29",X"20",X"6f",X"72",X"20",X"44",X"20",X"28",X"31",X"31",X"29",X"20",X"62",X"79",X"20",X"75",X"73",X"69",X"6e",X"67",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"20",X"31",X"2d",X"30");
-constant in_13_str_len : natural := 79;
+constant in_6 : CHAR_ARRAY(0 to 95) := (X"46",X"65",X"74",X"63",X"68",X"20",X"61",X"20",X"76",X"61",X"6c",X"75",X"65",X"0A",X"0D",X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"65",X"69",X"74",X"68",X"65",X"72",X"20",X"72",X"65",X"67",X"20",X"41",X"20",X"28",X"30",X"30",X"29",X"2c",X"20",X"42",X"20",X"28",X"30",X"31",X"29",X"2c",X"20",X"43",X"20",X"28",X"31",X"30",X"29",X"20",X"6f",X"72",X"20",X"44",X"20",X"28",X"31",X"31",X"29",X"20",X"62",X"79",X"20",X"75",X"73",X"69",X"6e",X"67",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"20",X"31",X"2d",X"30",X"0A",X"0D");
 
 -- Please select a bit-size
-constant in_14 : CHAR_ARRAY(0 to 23) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"61",X"20",X"62",X"69",X"74",X"2d",X"73",X"69",X"7a",X"65");
-constant in_14_str_len : natural := 24;
-
 -- 000 for 16-bit inputs, 001 for 32-bit inputs, 011 for 64-bit inputs
-constant in_15 : CHAR_ARRAY(0 to 66) := (X"30",X"30",X"30",X"20",X"66",X"6f",X"72",X"20",X"31",X"36",X"2d",X"62",X"69",X"74",X"20",X"69",X"6e",X"70",X"75",X"74",X"73",X"2c",X"20",X"30",X"30",X"31",X"20",X"66",X"6f",X"72",X"20",X"33",X"32",X"2d",X"62",X"69",X"74",X"20",X"69",X"6e",X"70",X"75",X"74",X"73",X"2c",X"20",X"30",X"31",X"31",X"20",X"66",X"6f",X"72",X"20",X"36",X"34",X"2d",X"62",X"69",X"74",X"20",X"69",X"6e",X"70",X"75",X"74",X"73");
-constant in_15_str_len : natural := 67;
+constant in_7 : CHAR_ARRAY(0 to 94) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"73",X"65",X"6c",X"65",X"63",X"74",X"20",X"61",X"20",X"62",X"69",X"74",X"2d",X"73",X"69",X"7a",X"65",X"0A",X"0D",X"30",X"30",X"30",X"20",X"66",X"6f",X"72",X"20",X"31",X"36",X"2d",X"62",X"69",X"74",X"20",X"69",X"6e",X"70",X"75",X"74",X"73",X"2c",X"20",X"30",X"30",X"31",X"20",X"66",X"6f",X"72",X"20",X"33",X"32",X"2d",X"62",X"69",X"74",X"20",X"69",X"6e",X"70",X"75",X"74",X"73",X"2c",X"20",X"30",X"31",X"31",X"20",X"66",X"6f",X"72",X"20",X"36",X"34",X"2d",X"62",X"69",X"74",X"20",X"69",X"6e",X"70",X"75",X"74",X"73",X"0A",X"0D");
+constant in_7_str_len : natural := 95;
 
 -- Please place input A on the switches
-constant in_16 : CHAR_ARRAY(0 to 35) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"70",X"6c",X"61",X"63",X"65",X"20",X"69",X"6e",X"70",X"75",X"74",X"20",X"41",X"20",X"6f",X"6e",X"20",X"74",X"68",X"65",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73");
-constant in_16_str_len : natural := 36;
+constant in_8 : CHAR_ARRAY(0 to 37) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"70",X"6c",X"61",X"63",X"65",X"20",X"69",X"6e",X"70",X"75",X"74",X"20",X"41",X"20",X"6f",X"6e",X"20",X"74",X"68",X"65",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"0A",X"0D");
+constant in_8_or_9_str_len : natural := 38;
 
 -- Please place input B on the switches
-constant in_17 : CHAR_ARRAY(0 to 35) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"70",X"6c",X"61",X"63",X"65",X"20",X"69",X"6e",X"70",X"75",X"74",X"20",X"42",X"20",X"6f",X"6e",X"20",X"74",X"68",X"65",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73");
-constant in_17_str_len : natural := 36;
+constant in_9 : CHAR_ARRAY(0 to 37) := (X"50",X"6c",X"65",X"61",X"73",X"65",X"20",X"70",X"6c",X"61",X"63",X"65",X"20",X"69",X"6e",X"70",X"75",X"74",X"20",X"42",X"20",X"6f",X"6e",X"20",X"74",X"68",X"65",X"20",X"73",X"77",X"69",X"74",X"63",X"68",X"65",X"73",X"0A",X"0D");
 
 -- Output = 
-constant in_18 : CHAR_ARRAY(0 to 8) := (X"4f",X"75",X"74",X"70",X"75",X"74",X"20",X"3d",X"20");
-constant in_18_str_len : natural := 9;
+constant in_10 : CHAR_ARRAY(0 to 10) := (X"4f",X"75",X"74",X"70",X"75",X"74",X"20",X"3d",X"20",X"0A",X"0D");
+constant in_10_str_len : natural := 11;
 
-
-constant in_19 : CHAR_ARRAY(0 to 3) := (X"54",X"65",X"73",X"74");
-constant in_19_str_len : natural := 4;
+-- Input you message: Hello, and welcome! This is our final project for Embedded Systems. - Zach, Bryan and Bayley
+constant in_11 : CHAR_ARRAY(0 to 93) := (X"48",X"65",X"6c",X"6c",X"6f",X"2c",X"20",X"61",X"6e",X"64",X"20",X"77",X"65",X"6c",X"63",X"6f",X"6d",X"65",X"21",X"20",X"54",X"68",X"69",X"73",X"20",X"69",X"73",X"20",X"6f",X"75",X"72",X"20",X"66",X"69",X"6e",X"61",X"6c",X"20",X"70",X"72",X"6f",X"6a",X"65",X"63",X"74",X"20",X"66",X"6f",X"72",X"20",X"45",X"6d",X"62",X"65",X"64",X"64",X"65",X"64",X"20",X"53",X"79",X"73",X"74",X"65",X"6d",X"73",X"2e",X"20",X"2d",X"20",X"5a",X"61",X"63",X"68",X"2c",X"20",X"42",X"72",X"79",X"61",X"6e",X"20",X"61",X"6e",X"64",X"20",X"42",X"61",X"79",X"6c",X"65",X"79",X"0A",X"0D");
+constant in_11_str_len : natural := 94;
 
 -------------------------------
 -- END OF HARDCODED MESSAGES --
 -------------------------------
 
-signal temp_mode : integer := 19;
-
 --constant outA : CHAR_ARRAY(0 to 29) := (X"54",X"61",X"6b",X"65",X"20",X"74",X"68",X"61",X"74",X"20",X"56",X"47",X"41",X"2c",X"20",X"55",X"41",X"52",X"54",X"20",X"74",X"69",X"6c",X"6c",X"20",X"49",X"20",X"64",X"69",X"65");
-signal outA : CHAR_ARRAY(63 downto 0);															  
+signal outA : CHAR_ARRAY(0 to 63); 														  
 --signal inA : std_logic_vector(63 downto 0); -- pull in the input
-
 
 --Contains the current string being sent over uart.
 signal sendStr : CHAR_ARRAY(0 to (MAX_STR_LEN - 1));
@@ -276,21 +250,20 @@ begin
 	end if;
 end process;
 
-
-
-
+-- Converts the output into a character array
 uart_convert : process (CLK)
 begin
-	for i in 0 to 63 loop
-		if inA(i) = '1' then
-			outA(i) <= X"31"; -- One
-		else 
-			outA(i) <= X"30"; -- Zero
-		end if;
-	end loop;
+    if (rising_edge(CLK)) then
+        inA_mod <= std_logic_vector(to_unsigned(inA, OUTA_STR_LEN));
+        for i in 0 to 63 loop
+            if inA_mod(i) = '1' then
+                outA(i) <= X"31"; -- One
+            else 
+                outA(i) <= X"30"; -- Zero
+            end if;
+        end loop;
+    end if;
 end process;
-
-
 
 --Loads the sendStr and strEnd signals when a LD state is
 --is reached.
@@ -298,68 +271,47 @@ string_load_process : process (CLK)
 begin
     if (rising_edge(CLK)) then
         if (uartState = LD_INIT_STR) then
-            sendStr(0 to 3) <= in_19;
-            strEnd <= in_19_str_len;
+            sendStr(0 to 93) <= in_11;
+            strEnd <= in_11_str_len;
         
             elsif (uartState = LD_BTN_STR) then
-            case temp_mode is
+            case mode is
                 when 	 0  => 
-                    sendStr(0 to 79) <= in_0; 
+                    sendStr(0 to 229) <= in_0; 
                     strEnd <= in_0_str_len; 
                 when 	 1  =>
-                    sendStr(0 to 143) <= in_1; 
+                    sendStr(0 to 119) <= in_1; 
                     strEnd <= in_1_str_len; 
                 when 	 2  =>
-                    sendStr(0 to 81) <= in_2; 
+                    sendStr(0 to 171) <= in_2; 
                     strEnd <= in_2_str_len; 
                 when 	 3  =>
-                    sendStr(0 to 33) <= in_3; 
+                    sendStr(0 to 139) <= in_3; 
                     strEnd <= in_3_str_len; 
                 when 	 4  =>
-                    sendStr(0 to 87) <= in_4; 
+                    sendStr(0 to 201) <= in_4; 
                     strEnd <= in_4_str_len; 
                 when 	 5  =>
-                    sendStr(0 to 79) <= in_5; 
-                    strEnd <= in_5_str_len; 
+                    sendStr(0 to 95) <= in_5; 
+                    strEnd <= in_5_or_6_str_len; 
                 when 	 6  =>
-                    sendStr(0 to 80) <= in_6;
-                    strEnd <= in_6_str_len; 
+                    sendStr(0 to 95) <= in_6;
+                    strEnd <= in_5_or_6_str_len; 
                 when 	 7  =>
-                    sendStr(0 to 54) <= in_7; 
+                    sendStr(0 to 94) <= in_7; 
                     strEnd <= in_7_str_len; 
                 when 	 8  =>
-                    sendStr(0 to 79) <= in_8; 
-                    strEnd <= in_8_str_len;
+                    sendStr(0 to 37) <= in_8; 
+                    strEnd <= in_8_or_9_str_len;
                 when 	 9  =>
-                    sendStr(0 to 117) <= in_9; 
-                    strEnd <= in_9_str_len;
+                    sendStr(0 to 37) <= in_9; 
+                    strEnd <= in_8_or_9_str_len;
                 when 	 10 =>
-                    sendStr(0 to 12) <= in_10; 
+                    sendStr(0 to 10) <= in_10; 
                     strEnd <= in_10_str_len;
                 when 	 11 =>
-                    sendStr(0 to 78) <= in_11; 
+                    sendStr(0 to 93) <= in_11; 
                     strEnd <= in_11_str_len;
-                when 	 12 =>
-                    sendStr(0 to 12) <= in_12; 
-                    strEnd <= in_12_str_len;
-                when 	 13 =>
-                    sendStr(0 to 78) <= in_13; 
-                    strEnd <= in_13_str_len;
-                when 	 14 =>
-                    sendStr(0 to 23) <= in_14; 
-                    strEnd <= in_14_str_len;
-                when 	 15 =>
-                    sendStr(0 to 66) <= in_15; 
-                    strEnd <= in_15_str_len;
-                when 	 16 =>
-                    sendStr(0 to 35) <= in_16; 
-                    strEnd <= in_16_str_len;
-                when 	 17 =>
-                    sendStr(0 to 35) <= in_17; 
-                    strEnd <= in_17_str_len;
-                when 	 18 =>
-                    sendStr(0 to 8) <= in_18; 
-                    strEnd <= in_18_str_len;
                 when others =>
                     sendStr(0 to 63) <= outA; --  result;
                     strEnd <= OUTA_STR_LEN; --result;

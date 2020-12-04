@@ -41,6 +41,7 @@ reg     printed;
 reg     [1:0] count;
 reg     sign_temp;
 reg     [4:0] uart_mode;
+reg     if_button_press;
 
 debouncer u1 (
     .pb_1(enable), .clk(clk), .pb_out(enable_deb)
@@ -85,6 +86,7 @@ initial begin
     sign_temp <= 0;
     printed <= 1;
     uart_mode <= 19;
+    if_button_press <= 0;
 end
     
 always @ (posedge clk) begin
@@ -104,65 +106,53 @@ always @ (posedge clk) begin
             if (printed) begin
                 uart_mode <= 0;
                 // "Please select a mode on swithces 2-0. Press button U18 when the mode is selected"                
-                uart_mode <= uart_mode +1;
                 // "000 for Floating Point, 001 for Binary Arthimatic, 010 for Bit Shifting, 011 for Binary Logic, 100 to Fetch a Stored Value, 101 to Store A Value"
                 printed <= 0;
-            end else if (enable_deb == 1'b1) begin
+            end else if (enable_deb == 1'b1)
+                if_button_press <= 1;
+            else if (if_button_press == 1'b1) begin
                 operation <= switches[2:0];
-                state <= state+1;
+                state <= 3'b001;
                 printed <= 1;
+                if_button_press <= 0;
             end
         end
 
         3'b001:begin
             if (printed) begin
                 case (operation)
-                3'b000: begin
-                    uart_mode <= uart_mode +1; 
+                3'b000: 
+                    uart_mode <= 1; 
                     // "Please select an FPU operation on switches 1-0. Then press U18 to confirm the mode"
-                    uart_mode <= uart_mode +1;
                     // "00: add. 01: sub. 10: mul. 11: div"
-                end
-
-                3'b001: begin
-                    uart_mode <= uart_mode +1;
+                3'b001:
+                    uart_mode <= 2;
                     // "Please select a Arthimatic Operation on switches 2-0. Then press U18 to confirm the mode"
-                    uart_mode <= uart_mode +1;
                     // "000: add (A+B). 001: sub (A-B). 010: mul (A*B). 011: div (A/B). 100: rem (A % B)"
-                end
-
-                3'b010: begin
-                    uart_mode <= uart_mode +1;
+                3'b010:
+                    uart_mode <= 3;
                     // "Please select a Bit Operation on switches 1-0. Then press U18 to confirm the mode"
-                    uart_mode <= uart_mode +1;
                     // "00: clear bit. 01: set bit. 10: get bit. 11: set output"
-                end
-
-                3'b011: begin
-                    uart_mode <= uart_mode +1;
+                3'b011:
+                    uart_mode <= 4;
                     // "Please select a Binary Logic on switches 2-0. Then press U18 to confirm the mode"
-                    uart_mode <= uart_mode +1;
                     // "000: and (A&B). 001: nand ~(A&B). 010: or (AxB). 011: nor ~(AxB). 100: xor (A ^ B)). 101: xnor ~(A ^ B). 110: not (~A)"
-                end
-
-                3'b100: begin
-                    uart_mode <= uart_mode +1;
+                3'b100:                     
+                    uart_mode <= 5;
                     // "Store a value"
-                    uart_mode <= uart_mode +1;
                     // "Please select either reg A (00), B (01), C (10) or D (11) by using switches 1-0"
-                end
-
-                3'b101: begin
-                    uart_mode <= uart_mode +1;
+                3'b101:
+                    uart_mode <= 6;
                     // "Fetch a value"
-                    uart_mode <= uart_mode +1;
                     // "Please select either reg A (00), B (01), C (10) or D (11) by using switches 1-0"
-                end
                 endcase
                 printed <= 0;
-            end else if (enable_deb == 1'b1) begin
+            end else if (enable_deb == 1'b1)
+                if_button_press <= 1;
+            else if (if_button_press == 1'b1) begin
+                if_button_press <= 0;
                 op2 <= switches[2:0];
-                state <= state+1;
+                state <= 3'b010;
                 printed <= 1;
             end
         end 
@@ -170,15 +160,16 @@ always @ (posedge clk) begin
         
         3'b010: begin
             if (printed) begin
-                uart_mode <= uart_mode +1;
+                uart_mode <= 7;
                 // "Please select a bit-size"
-                uart_mode <= uart_mode +1;
                 // "000 for 16-bit inputs, 001 for 32-bit inputs, 011 for 64-bit inputs"
                 printed <= 0;
-            
-            end else if (enable_deb == 1'b1) begin
+            end else if (enable_deb == 1'b1)
+                if_button_press <= 1;
+            else if (if_button_press == 1'b1) begin
+                if_button_press <= 0;
                 size_sel <= switches[1:0];
-                state <= state + 1;
+                state <= 3'b011;
                 printed <= 1;
             end
 
@@ -186,11 +177,13 @@ always @ (posedge clk) begin
 
         3'b011:begin
             if (printed) begin
-                uart_mode <= uart_mode +1;
+                uart_mode <= 8;
                 // "Please place input A on the switches"
                 printed <= 0;
                 count <= 0;
-            end else if ((count <= size_sel) && (enable_deb == 1'b1)) begin
+            end else if (enable_deb == 1'b1)
+                if_button_press <= 1;
+            else if (if_button_press == 1'b1 && count <= size_sel) begin
                 case (count)
                 2'b00:  opa[15:0] = switches;
                 2'b01:  opa[31:16] = switches;
@@ -198,11 +191,12 @@ always @ (posedge clk) begin
                 2'b11:  opa[63:47] = switches;
                 endcase
                 count <= count+1;
+                if_button_press <= 0;
             end else if (count > size_sel) begin
                 if (operation == 3'b1XX || (operation == 3'b001 && op2 == 3'b101) || (operation == 3'b011 && op2 == 3'b110)) 
                     state = 3'b101;
                 else
-                    state = state+1;
+                    state = 3'b100;
                 printed <= 1;
             end
             
@@ -210,11 +204,13 @@ always @ (posedge clk) begin
 
         3'b100:begin
             if (printed) begin
-                uart_mode <= uart_mode +1;
+                uart_mode <= 9;
                 // "Please place input B on the switches"
                 printed <= 0;
                 count <= 0;
-            end else if (count <= size_sel && enable_deb == 1'b1) begin
+            end else if (enable_deb == 1'b1)
+                if_button_press <= 1;
+            else if (if_button_press == 1'b1 && count <= size_sel) begin
                 case (count)
                 2'b00:  opb[15:0] = switches;
                 2'b01:  opb[31:16] = switches;
@@ -222,8 +218,9 @@ always @ (posedge clk) begin
                 2'b11:  opb[63:47] = switches;
                 endcase
                 count <= count+1;
+                if_button_press <= 0;
             end else if (count > size_sel) begin
-                state <= state+1;
+                state <= 3'b101;
                 printed <= 1;
             end
             
@@ -258,13 +255,32 @@ always @ (posedge clk) begin
             2'b01:      sign_temp = out[31];
             2'b11:      sign_temp = out[63];  
             endcase                      
-            
-            uart_mode <= uart_mode +1;
-            uart_mode <= uart_mode +1;
+            uart_mode <= 10;
             // "Output = "
-            state <= 0;
-            uart_mode <= 0;
+            state <= 3'b110;
+        end
+
+        3'b110:begin
+            if (enable_deb == 1'b1)
+                if_button_press <= 1;
+            else if (if_button_press == 1'b1) begin
+                if_button_press <= 0;
+                uart_mode <= 19;
+                state <= 3'b111;
+                uart_mode <= 0;
+            end
         end 
+
+        3'b111:begin
+            if (enable_deb == 1'b1)
+                if_button_press <= 1;
+            else if (if_button_press == 1'b1) begin
+                if_button_press <= 0;
+                state <= 3'b000;
+                uart_mode <= 0;
+            end
+        end 
+
 
         endcase
 
