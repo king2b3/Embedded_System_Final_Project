@@ -277,7 +277,6 @@ always @ (posedge clk) begin
             else if (if_button_press == 1'b1) begin
                 if_button_press <= 0;
                 state <= 3'b000;
-                uart_mode <= 0;
             end
         end 
 

@@ -15,13 +15,13 @@ reg         [63:0]  out_temp;
 always @ (clk) begin
     
     case (operation)
-    3'b000: out_temp <= opa & opb;       // A & B
-    3'b001: out_temp <= ~(opa & opb);    // ~(A & opb)
-    3'b010: out_temp <= opa | opb;       // A x B
-    3'b011: out_temp <= ~(opa | opb);    // ~(A | B)
-    3'b100: out_temp <= opa ^ opb;       // A ^ B 
-    3'b101: out_temp <= ~(opa ^ opb);    // ~(A^B)
-    3'b110: out_temp <= !(opa);          // A^B
+    3'b000: out_temp <= opa & opb;       // A and B
+    3'b001: out_temp <= ~(opa & opb);    // A nand B
+    3'b010: out_temp <= opa | opb;       // A or B
+    3'b011: out_temp <= ~(opa | opb);    // A nor B
+    3'b100: out_temp <= opa ^ opb;       // A xor B 
+    3'b101: out_temp <= (opa ~^ opb);    // A xnor
+    3'b110: out_temp <= ~(opa);          // not A
     endcase
 
 end
