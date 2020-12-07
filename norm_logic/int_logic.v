@@ -7,10 +7,10 @@
 module int_log(clk, operation, opa, opb, out);
 input       clk;
 input       [2:0] operation; 
-input       [63:0]  opa, opb;
-output      [63:0]  out;      
+input       [15:0]  opa, opb;
+output      [15:0]  out;      
 
-reg         [63:0]  out_temp; 
+reg         [15:0]  out_temp; 
 
 always @ (clk) begin
     
