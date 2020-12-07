@@ -55,7 +55,7 @@ type UART_STATE_TYPE is (RST_REG, LD_INIT_STR, SEND_CHAR, RDY_LOW, WAIT_RDY, WAI
 
 type CHAR_ARRAY is array (integer range<>) of std_logic_vector(7 downto 0);
 
-signal inA_mod : STD_LOGIC_VECTOR (63 downto 0);
+signal inA_mod : STD_LOGIC_VECTOR (15 downto 0);
 
 constant TMR_CNTR_MAX : std_logic_vector(26 downto 0) := "101111101011110000100000000"; --100,000,000 = clk cycles per second
 constant TMR_VAL_MAX : std_logic_vector(3 downto 0) := "1001"; --9
@@ -63,7 +63,7 @@ constant RESET_CNTR_MAX : std_logic_vector(17 downto 0) := "110000110101000000";
 
 
 constant MAX_STR_LEN : integer := 230;
-constant OUTA_STR_LEN : natural := 64;
+constant OUTA_STR_LEN : natural := 16;
 
 ------------------------
 -- HARDCODED MESSAGES --
@@ -159,6 +159,11 @@ signal reset_cntr : std_logic_vector (17 downto 0) := (others=>'0');
 
 signal btnDeBnc : std_logic;
 
+constant final_out_len : natural := 76;
+
+signal final_out : CHAR_ARRAY(0 to 75);
+
+
 begin
 
 ----------------------------------------------------------
@@ -251,18 +256,21 @@ begin
 end process;
 
 -- Converts the output into a character array
+
 uart_convert : process (CLK)
 begin
-    if (rising_edge(CLK)) then
-        inA_mod <= std_logic_vector(to_unsigned(inA, OUTA_STR_LEN));
-        for i in 0 to 63 loop
-            if inA_mod(i) = '1' then
-                outA(i) <= X"31"; -- One
-            else 
-                outA(i) <= X"30"; -- Zero
-            end if;
-        end loop;
-    end if;
+   if (rising_edge(CLK)) then
+       inA_mod <= std_logic_vector(to_unsigned(inA, OUTA_STR_LEN));
+       for i in 0 to 15 loop
+           if inA_mod(i) = '1' then
+               outA(i) <= X"31"; -- One
+           else
+               outA(i) <= X"30"; -- Zero
+           end if;
+       end loop;
+   end if;
+   final_out(0 to 10) <= in_10;
+   final_out(11 to 74) <= outA;
 end process;
 
 --Loads the sendStr and strEnd signals when a LD state is
@@ -306,9 +314,9 @@ begin
                 when 	 9  =>
                     sendStr(0 to 37) <= in_9; 
                     strEnd <= in_8_or_9_str_len;
-                when 	 10 =>
-                    sendStr(0 to 10) <= in_10; 
-                    strEnd <= in_10_str_len;
+                when     10 =>
+                   sendStr(0 to 75) <= final_out;
+                   strEnd <= final_out_len;
                 when 	 11 =>
                     sendStr(0 to 93) <= in_11; 
                     strEnd <= in_11_str_len;
