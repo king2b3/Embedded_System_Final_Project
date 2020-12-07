@@ -15,6 +15,7 @@ reg         [15:0]  out_temp;
 always @ (clk) begin
     
     case (operation)
+
     3'b000: out_temp <= opa & opb;       // A and B
     3'b001: out_temp <= ~(opa & opb);    // A nand B
     3'b010: out_temp <= opa | opb;       // A or B
