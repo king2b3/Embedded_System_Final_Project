@@ -1,0 +1,15 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"../../../../../double_fpu/trunk/fpu_add.v" \
+"../../../../../double_fpu/trunk/fpu_div.v" \
+"../../../../../double_fpu/trunk/fpu_exceptions.v" \
+"../../../../../double_fpu/trunk/fpu_mul.v" \
+"../../../../../double_fpu/trunk/fpu_round.v" \
+"../../../../../double_fpu/trunk/fpu_sub.v" \
+"../../../../../double_fpu/trunk/fpu_double.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

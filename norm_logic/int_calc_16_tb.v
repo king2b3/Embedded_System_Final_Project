@@ -1,5 +1,5 @@
 `timescale 1ns / 100ps
-module int_calc_16_tb;
+module top_tb;
 
 reg clk;
 reg rst; 
