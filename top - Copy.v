@@ -4,7 +4,8 @@
 
 `timescale 1ns / 100ps
 
-module top(clk, rst, enable, switches, leds, UART_TXD
+module top(clk, rst, enable, switches, sign, ready, underflow, overflow,
+           inexact, exception, invalid, UART_TXD
 );
 
 input       clk;
@@ -13,7 +14,6 @@ input       enable;
 input       [15:0]  switches;
 
 // led outputs
-/*
 output      sign;
 output		ready;
 output		underflow;
@@ -21,19 +21,17 @@ output		overflow;
 output		inexact;
 output		exception;
 output		invalid;   
-*/ 
-output [15:0] leds; 
-output      UART_TXD; 
+output      UART_TXD;   
 
 reg     [2:0] operation;
 reg     [2:0] op2;
-//wire    [63:0]  fp_out;
-wire    [15:0]  bit_manip_out;
-wire    [15:0]  int_calc_out;
-wire    [15:0]  int_logic_out;
-reg     [15:0]  out;
+wire    [63:0]  fp_out;
+wire    [63:0]  bit_manip_out;
+wire    [63:0]  int_calc_out;
+wire    [63:0]  int_logic_out;
+reg     [63:0]  out;
 
-reg     [15:0]  opa, opb;
+reg     [63:0]  opa, opb;
 reg     [1:0] size_sel; // 0: 16 bit. 1: 32 bit. 2: 64 bit.
 reg     [2:0] state; 
 reg     [255:0] memory;
@@ -48,15 +46,14 @@ reg     if_button_press;
 debouncer u1 (
     .pb_1(enable), .clk(clk), .pb_out(enable_deb)
 );
-/*
->>>>>>> origin/BayleyDev
+
 fpu_double u2( 
     .clk(clk), .rst(rst), .enable(1'b1), .rmode(rmode), 
     .fpu_op(op2), .opa(opa), .opb(opb), .out(fp_out), .ready(ready), 
     .underflow(underflow),.overflow(overflow), .inexact(inexact), 
     .exception(expection), .invalid(invalid)
 );
-*/
+
 int_bit_manip u3(
     .clk(clk), .operation(op2),
     .opa(opa), .opb(opb), .out(bit_manip_out)
@@ -155,21 +152,47 @@ always @ (posedge clk) begin
             else if (if_button_press == 1'b1) begin
                 if_button_press <= 0;
                 op2 <= switches[2:0];
-                state <= 3'b011;
+                state <= 3'b010;
                 printed <= 1;
             end
         end 
         
-       3'b011:begin
+        
+        3'b010: begin
             if (printed) begin
-                uart_mode <= 8;
-                // "Please place input A on the switches"
+                uart_mode <= 7;
+                // "Please select a bit-size"
+                // "000 for 16-bit inputs, 001 for 32-bit inputs, 011 for 64-bit inputs"
                 printed <= 0;
             end else if (enable_deb == 1'b1)
                 if_button_press <= 1;
             else if (if_button_press == 1'b1) begin
-                opa[15:0] = switches;
                 if_button_press <= 0;
+                size_sel <= switches[1:0];
+                state <= 3'b011;
+                printed <= 1;
+            end
+
+        end
+
+        3'b011:begin
+            if (printed) begin
+                uart_mode <= 8;
+                // "Please place input A on the switches"
+                printed <= 0;
+                count <= 0;
+            end else if (enable_deb == 1'b1)
+                if_button_press <= 1;
+            else if (if_button_press == 1'b1 && count <= size_sel) begin
+                case (count)
+                2'b00:  opa[15:0] = switches;
+                2'b01:  opa[31:16] = switches;
+                2'b10:  opa[47:31] = switches;
+                2'b11:  opa[63:47] = switches;
+                endcase
+                count <= count+1;
+                if_button_press <= 0;
+            end else if (count > size_sel) begin
                 if (operation == 3'b1XX || (operation == 3'b001 && op2 == 3'b101) || (operation == 3'b011 && op2 == 3'b110)) 
                     state = 3'b101;
                 else
@@ -184,11 +207,19 @@ always @ (posedge clk) begin
                 uart_mode <= 9;
                 // "Please place input B on the switches"
                 printed <= 0;
+                count <= 0;
             end else if (enable_deb == 1'b1)
                 if_button_press <= 1;
-            else if (if_button_press == 1'b1) begin
-                opb[15:0] = switches;
+            else if (if_button_press == 1'b1 && count <= size_sel) begin
+                case (count)
+                2'b00:  opb[15:0] = switches;
+                2'b01:  opb[31:16] = switches;
+                2'b10:  opb[47:31] = switches;
+                2'b11:  opb[63:47] = switches;
+                endcase
+                count <= count+1;
                 if_button_press <= 0;
+            end else if (count > size_sel) begin
                 state <= 3'b101;
                 printed <= 1;
             end
@@ -197,7 +228,7 @@ always @ (posedge clk) begin
 
         3'b101:begin
             case (operation)
-            //3'b000:     out <= fp_out;
+            3'b000:     out <= fp_out;
             3'b001:     out <= bit_manip_out;
             3'b010:     out <= int_calc_out;
             3'b011:     out <= int_logic_out;
@@ -219,7 +250,11 @@ always @ (posedge clk) begin
                 out <= opa;
             end
             endcase
-            //sign_temp = out[15];                     
+            case (size_sel)
+            2'b00:      sign_temp = out[15];
+            2'b01:      sign_temp = out[31];
+            2'b11:      sign_temp = out[63];  
+            endcase                      
             uart_mode <= 10;
             // "Output = "
             state <= 3'b110;
@@ -230,6 +265,7 @@ always @ (posedge clk) begin
                 if_button_press <= 1;
             else if (if_button_press == 1'b1) begin
                 if_button_press <= 0;
+                uart_mode <= 19;
                 state <= 3'b111;
                 uart_mode <= 0;
             end
@@ -250,6 +286,6 @@ always @ (posedge clk) begin
     end
 end
 
-//assign sign = sign_temp;
-assign leds = out;
+assign sign = sign_temp;
+
 endmodule
