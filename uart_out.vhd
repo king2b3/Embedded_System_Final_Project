@@ -21,7 +21,7 @@ use IEEE.std_logic_unsigned.all;
 entity uart_out is
     Port (
         inA 			: in  integer;
-        enable 			: in  STD_LOGIC;
+        enable_uart 	: in  STD_LOGIC;
         CLK 			: in  STD_LOGIC;
         mode            : in integer;
         UART_TXD 	: out  STD_LOGIC
@@ -128,7 +128,7 @@ constant in_11_str_len : natural := 94;
 -------------------------------
 
 --constant outA : CHAR_ARRAY(0 to 29) := (X"54",X"61",X"6b",X"65",X"20",X"74",X"68",X"61",X"74",X"20",X"56",X"47",X"41",X"2c",X"20",X"55",X"41",X"52",X"54",X"20",X"74",X"69",X"6c",X"6c",X"20",X"49",X"20",X"64",X"69",X"65");
-signal outA : CHAR_ARRAY(0 to 63); 														  
+signal outA : CHAR_ARRAY(63 downto 0); 														  
 --signal inA : std_logic_vector(63 downto 0); -- pull in the input
 
 --Contains the current string being sent over uart.
@@ -178,7 +178,7 @@ Inst_btn_debounce: debouncer_2
         DEBNC_CLOCKS => (2**16),
         PORT_WIDTH => 1)
     port map(
-		SIGNAL_I => enable,
+		SIGNAL_I => enable_uart,
 		CLK_I => CLK,
 		SIGNAL_O => btnDeBnc
 	);
@@ -263,14 +263,14 @@ begin
        inA_mod <= std_logic_vector(to_unsigned(inA, OUTA_STR_LEN));
        for i in 0 to 15 loop
            if inA_mod(i) = '1' then
-               outA(i) <= X"30"; -- One
+               outA(i) <= X"31"; -- One
            else
-               outA(i) <= X"31"; -- Zero
+               outA(i) <= X"30"; -- Zero
            end if;
        end loop;
    end if;
    final_out(0 to 10) <= in_10;
-   final_out(11 to 74) <= outA;
+   final_out(11 to 74) <= outA(63 downto 0);
 end process;
 
 --Loads the sendStr and strEnd signals when a LD state is

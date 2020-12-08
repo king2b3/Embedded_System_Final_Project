@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2020.1 (64-bit)
+# SW Build 2902540 on Wed May 27 19:54:49 MDT 2020
+# IP Build 2902112 on Wed May 27 22:43:36 MDT 2020
+# Start of session at: Mon Dec  7 19:43:31 2020
+# Process ID: 14628
+# Current directory: E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/test_final_project/test_final_project.runs/synth_1
+# Command line: vivado.exe -log top.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source top.tcl
+# Log file: E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/test_final_project/test_final_project.runs/synth_1/top.vds
+# Journal file: E:/Classes/Embedded Systems/Final_Project/Embedded_System_Final_Project/test_final_project/test_final_project.runs/synth_1\vivado.jou
+#-----------------------------------------------------------
+source top.tcl -notrace
